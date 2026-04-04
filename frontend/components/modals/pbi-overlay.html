@@ -1,0 +1,21 @@
+<div class="pbi-overlay" id="pbi-overlay" onclick="closePBIOutside(event)">
+<div class="pbi-modal">
+<div class="pbi-header">
+<div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#F2C94C,#F2994A);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+<svg fill="white" height="18" viewbox="0 0 24 24" width="18"><rect height="10" width="4" x="2" y="12"></rect><rect height="15" width="4" x="9" y="7"></rect><rect height="20" width="4" x="16" y="2"></rect></svg>
+</div>
+<span class="pbi-title">Power BI Analytics Dashboard</span>
+<div class="pbi-tabs">
+<button class="pbi-tab active" onclick="switchPBITab('embed',this)">Live Report</button>
+<button class="pbi-tab" onclick="switchPBITab('overview',this)">Overview</button>
+<button class="pbi-tab" onclick="switchPBITab('category',this)">Category</button>
+<button class="pbi-tab" onclick="switchPBITab('stock',this)">Stock Trend</button>
+<button class="pbi-tab" onclick="switchPBITab('warehouse',this)">Warehouse</button>
+</div>
+<button class="pbi-close" onclick="closePBI()">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg>
+</button>
+</div>
+<div class="pbi-body" id="pbi-body"></div>
+</div>
+</div>

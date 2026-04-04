@@ -1,0 +1,76 @@
+    <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="navbar">
+  <img src="assets/cognexiaai-logo.png" class="logo" height="200" width="250">
+</div>
+</div>
+<nav class="sidebar-nav">
+<div class="nav-section">
+<div class="nav-label" data-i18n="overview">Overview</div>
+<div class="nav-item active" onclick="navigate('dashboard',this)">
+<svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><rect height="7" rx="1.5" width="7" x="3" y="3"></rect><rect height="7" rx="1.5" width="7" x="14" y="3"></rect><rect height="7" rx="1.5" width="7" x="3" y="14"></rect><rect height="7" rx="1.5" width="7" x="14" y="14"></rect></svg>
+<span class="nav-item-label" data-i18n="dashboard">Dashboard</span>
+<span class="nav-tooltip" data-i18n="dashboard">Dashboard</span>
+</div>
+<div class="nav-item" onclick="navigate('analytics',this)">
+<svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+<span class="nav-item-label" data-i18n="analytics">Analytics</span>
+<span class="nav-badge">Live</span>
+<span class="nav-tooltip" data-i18n="analytics">Analytics</span>
+</div>
+</div>
+<div class="nav-section">
+<div class="nav-label" data-i18n="management">Management</div>
+<div class="nav-item" onclick="navigate('brands',this)">
+<svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" x2="7.01" y1="7" y2="7"></line></svg>
+<span class="nav-item-label" data-i18n="brands">Brands</span>
+<span class="nav-tooltip" data-i18n="brands">Brands</span>
+</div>
+<div class="nav-item" onclick="navigate('products',this)">
+<svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+<span class="nav-item-label" data-i18n="products">Products</span>
+<span class="nav-tooltip" data-i18n="products">Products</span>
+</div>
+
+<div class="nav-item" onclick="navigate('network',this)">
+<svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+<span class="nav-item-label" data-i18n="our_network">Our Network</span>
+<span class="nav-tooltip" data-i18n="our_network">Our Network</span>
+</div>
+</div>
+<div class="nav-section">
+<div class="nav-label" data-i18n="insights">Insights</div>
+<div class="nav-item" onclick="navigate('reports',this)">
+<svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" x2="8" y1="13" y2="13"></line><line x1="16" x2="8" y1="17" y2="17"></line></svg>
+<span class="nav-item-label" data-i18n="reports">Reports</span>
+<span class="nav-tooltip" data-i18n="reports">Reports</span>
+</div>
+
+<div class="nav-item" onclick="navigate('spotlight',this)">
+<svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+<span class="nav-item-label" data-i18n="spotlight">Spotlight</span>
+<span class="nav-tooltip" data-i18n="spotlight">Spotlight</span>
+</div>
+</div>
+<div class="nav-section">
+<div class="nav-label" data-i18n="other">Other</div>
+<div class="nav-item" onclick="navigate('settings',this)">
+<svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+<span class="nav-item-label" data-i18n="settings">Settings</span>
+<span class="nav-tooltip" data-i18n="settings">Settings</span>
+</div>
+<div class="nav-item" onclick="navigate('contact',this)">
+<svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+<span class="nav-item-label" data-i18n="contact">Contact</span>
+<span class="nav-tooltip" data-i18n="contact">Contact</span>
+</div>
+</div>
+</nav>
+
+<div class="sidebar-footer">
+<button class="collapse-btn" onclick="toggleSidebar()">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><polyline points="15 18 9 12 15 6"></polyline></svg>
+<span data-i18n="collapse">Collapse</span>
+</button>
+</div>
+</aside>

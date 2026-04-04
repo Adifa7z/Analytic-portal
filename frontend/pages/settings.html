@@ -1,0 +1,45 @@
+<div class="page" id="page-settings">
+<div class="page-header">
+<div class="page-header-left">
+<h2 data-i18n="settings">Settings</h2>
+<p>Customize your portal experience</p>
+</div>
+</div>
+<div style="max-width:640px">
+<div class="card" style="margin-bottom:16px">
+<div class="settings-section">
+<div class="settings-title">Appearance</div>
+<div class="settings-row">
+<div><div class="settings-label">Dark Mode</div><div class="settings-sublabel">Switch between light and dark themes</div></div>
+<button class="toggle-switch" id="dark-toggle" onclick="toggleThemeBtn(this)"></button>
+</div>
+<div class="settings-row">
+<div><div class="settings-label">Language</div><div class="settings-sublabel">Switch portal language to Arabic (RTL)</div></div>
+<div class="lang-toggle">
+<button class="lang-btn active" onclick="setLangSettings('en',this)">English</button>
+<button class="lang-btn" onclick="setLangSettings('ar',this)">العربية</button>
+</div>
+</div>
+<div class="settings-row">
+<div><div class="settings-label">Compact Sidebar</div><div class="settings-sublabel">Collapse sidebar to icon-only mode</div></div>
+<button class="toggle-switch" id="sidebar-toggle" onclick="toggleSidebarBtn(this)"></button>
+</div>
+</div>
+</div>
+<div class="card" style="margin-bottom:16px">
+<div class="settings-section">
+<div class="settings-title">Notifications</div>
+<div class="settings-row"><div><div class="settings-label">Low Stock Alerts</div><div class="settings-sublabel">Get notified when inventory drops below threshold</div></div><button class="toggle-switch on" onclick="this.classList.toggle('on')"></button></div>
+<div class="settings-row"><div><div class="settings-label">Shipment Updates</div><div class="settings-sublabel">Real-time notifications for logistics</div></div><button class="toggle-switch on" onclick="this.classList.toggle('on')"></button></div>
+<div class="settings-row"><div><div class="settings-label">Report Generation</div><div class="settings-sublabel">Notify when monthly reports are ready</div></div><button class="toggle-switch" onclick="this.classList.toggle('on')"></button></div>
+</div>
+</div>
+<div class="card">
+<div class="settings-section">
+<div class="settings-title">Power BI Integration</div>
+<div class="settings-row"><div><div class="settings-label">Embed URL</div><div class="settings-sublabel">Configured: Jan &amp; Bros inventory dashboard</div></div><button class="btn-ghost" onclick="openPBI()" style="font-size:13px;padding:7px 14px">View</button></div>
+<div class="settings-row"><div><div class="settings-label">Auto-refresh Data</div><div class="settings-sublabel">Refresh Power BI data every 30 minutes</div></div><button class="toggle-switch on" onclick="this.classList.toggle('on')"></button></div>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,24 @@
+<div class="page" id="page-products">
+<div class="page-header">
+<div class="page-header-left">
+<h2 data-i18n="products">Products</h2>
+<p>Complete product catalogue across all categories</p>
+</div>
+<button class="btn-primary" onclick="openAddProduct()">+ Add Product</button>
+</div>
+<div class="products-toolbar">
+<div class="filter-chip active" onclick="filterProducts('all',this)">All</div>
+<div class="filter-chip" onclick="filterProducts('Pharmacy',this)">💊 Pharmacy</div>
+<div class="filter-chip" onclick="filterProducts('FMCG',this)">🛒 FMCG</div>
+<div class="filter-chip" onclick="filterProducts('Grocery',this)">🌾 Grocery</div>
+<div class="filter-chip" onclick="filterProducts('Clothing',this)">👗 Clothing</div>
+<div class="filter-chip" onclick="filterProducts('Electronics',this)">💻 Electronics</div>
+<div style="margin-left:auto;display:flex;gap:8px">
+<div class="search-bar" style="width:auto">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>
+<input oninput="filterProductsSearch(this.value)" placeholder="Search products..." type="text"/>
+</div>
+</div>
+</div>
+<div class="products-grid" id="products-grid"></div>
+</div>
