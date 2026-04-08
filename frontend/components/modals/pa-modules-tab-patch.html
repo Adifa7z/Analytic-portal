@@ -1,0 +1,89 @@
+<!-- ═══════════════════════════════════════════════════════════
+     PRODUCT ANALYTICS OVERLAY — PATCH FOR MODULES TAB
+     
+     STEP 1: In product-analytics-overlay.html, find the tabs row.
+     It currently has: Overview | Inventory | Details
+     Add this 4th button right after the Details tab button:
+═══════════════════════════════════════════════════════════════ -->
+
+<!-- ADD THIS TAB BUTTON (copy into the tabs <div>) -->
+<button class="pa-tab" onclick="switchPaTab('modules',this)"
+  style="padding:12px 16px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:5px">
+  <span style="font-size:11px">⚡</span> Modules
+</button>
+
+<!-- ═══════════════════════════════════════════════════════════
+     STEP 2: In product-analytics-overlay.html, find the last
+     tab content div (id="pa-tab-details"). 
+     ADD the following <div> immediately after it:
+═══════════════════════════════════════════════════════════════ -->
+
+<!-- ADD THIS TAB CONTENT DIV (inside #pa-body, after pa-tab-details) -->
+<div id="pa-tab-modules" style="display:none">
+  <div style="margin-bottom:16px">
+    <div style="font-size:16px;font-weight:800;color:var(--text)">Deep-Dive Analytics Modules</div>
+    <div style="font-size:12px;color:var(--text3);margin-top:3px">Full dashboard for each operational area — data loads dynamically for this product</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px">
+
+    <!-- Purchase Intelligence -->
+    <div onclick="openPurchaseModule(paCurrentProduct?.id)"
+      style="border:1.5px solid var(--border);border-radius:16px;padding:20px;cursor:pointer;background:linear-gradient(135deg,#eff6ff 0%,#fff 100%);transition:all 0.2s;position:relative;overflow:hidden"
+      onmouseenter="this.style.borderColor='#1A56DB';this.style.boxShadow='0 8px 28px rgba(26,86,219,0.13)';this.style.transform='translateY(-2px)'"
+      onmouseleave="this.style.borderColor='var(--border)';this.style.boxShadow='none';this.style.transform='none'">
+      <div style="position:absolute;top:-8px;right:-8px;font-size:56px;opacity:0.07">🛒</div>
+      <div style="font-size:26px;margin-bottom:10px">🛒</div>
+      <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:5px">Purchase Intelligence</div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.5">Supplier scores, reorder planning, cost trends, margin tracking &amp; AI purchase recommendations.</div>
+      <div style="margin-top:14px;font-size:11px;font-weight:700;color:#1A56DB;display:flex;align-items:center;gap:4px">Open Module <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+
+    <!-- Inventory Control -->
+    <div onclick="openInventoryModule(paCurrentProduct?.id)"
+      style="border:1.5px solid var(--border);border-radius:16px;padding:20px;cursor:pointer;background:linear-gradient(135deg,#f0fdf4 0%,#fff 100%);transition:all 0.2s;position:relative;overflow:hidden"
+      onmouseenter="this.style.borderColor='#10B981';this.style.boxShadow='0 8px 28px rgba(16,185,129,0.13)';this.style.transform='translateY(-2px)'"
+      onmouseleave="this.style.borderColor='var(--border)';this.style.boxShadow='none';this.style.transform='none'">
+      <div style="position:absolute;top:-8px;right:-8px;font-size:56px;opacity:0.07">📦</div>
+      <div style="font-size:26px;margin-bottom:10px">📦</div>
+      <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:5px">Inventory Control</div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.5">Physical stock by location, movement history, shrinkage alerts, valuation &amp; turnover analysis.</div>
+      <div style="margin-top:14px;font-size:11px;font-weight:700;color:#10B981;display:flex;align-items:center;gap:4px">Open Module <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+
+    <!-- Retail Operations -->
+    <div onclick="openRetailModule(paCurrentProduct?.id)"
+      style="border:1.5px solid var(--border);border-radius:16px;padding:20px;cursor:pointer;background:linear-gradient(135deg,#fffbeb 0%,#fff 100%);transition:all 0.2s;position:relative;overflow:hidden"
+      onmouseenter="this.style.borderColor='#F59E0B';this.style.boxShadow='0 8px 28px rgba(245,158,11,0.13)';this.style.transform='translateY(-2px)'"
+      onmouseleave="this.style.borderColor='var(--border)';this.style.boxShadow='none';this.style.transform='none'">
+      <div style="position:absolute;top:-8px;right:-8px;font-size:56px;opacity:0.07">🏪</div>
+      <div style="font-size:26px;margin-bottom:10px">🏪</div>
+      <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:5px">Retail Operations</div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.5">Sales by channel, market share breakdown, sell-through rate, promotions &amp; return rate trends.</div>
+      <div style="margin-top:14px;font-size:11px;font-weight:700;color:#F59E0B;display:flex;align-items:center;gap:4px">Open Module <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+
+    <!-- Decision Support -->
+    <div onclick="openDecisionModule(paCurrentProduct?.id)"
+      style="border:1.5px solid var(--border);border-radius:16px;padding:20px;cursor:pointer;background:linear-gradient(135deg,#faf5ff 0%,#fff 100%);transition:all 0.2s;position:relative;overflow:hidden"
+      onmouseenter="this.style.borderColor='#8B5CF6';this.style.boxShadow='0 8px 28px rgba(139,92,246,0.13)';this.style.transform='translateY(-2px)'"
+      onmouseleave="this.style.borderColor='var(--border)';this.style.boxShadow='none';this.style.transform='none'">
+      <div style="position:absolute;top:-8px;right:-8px;font-size:56px;opacity:0.07">🧠</div>
+      <div style="font-size:26px;margin-bottom:10px">🧠</div>
+      <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:5px">Decision Support</div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.5">Health scorecard, profit waterfall, 3-scenario revenue forecast, ROI &amp; priority action plan.</div>
+      <div style="margin-top:14px;font-size:11px;font-weight:700;color:#8B5CF6;display:flex;align-items:center;gap:4px">Open Module <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     STEP 3: In product-analytics.js, find the switchPaTab()
+     function and add 'modules' to the tabs array:
+
+     CHANGE:
+       ['overview','inventory','details'].forEach(...)
+     TO:
+       ['overview','inventory','details','modules'].forEach(...)
+═══════════════════════════════════════════════════════════════ -->

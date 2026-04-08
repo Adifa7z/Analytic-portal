@@ -1,0 +1,277 @@
+<!-- ═══════════════════════════════════════════════════════════
+     PRODUCT ANALYTICS OVERLAY
+     Updated UI – brand/product analytics dashboard style
+═══════════════════════════════════════════════════════════════ -->
+<div id="product-analytics-overlay" class="pbi-overlay" onclick="closeProductAnalyticsOutside(event)" style="display:none">
+  <div class="pbi-modal" style="max-width:1200px;width:96vw;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;border-radius:18px;background:var(--surface);box-shadow:0 30px 80px rgba(15,23,42,0.18)">
+
+    <!-- Header -->
+    <div class="pbi-header" style="padding:18px 24px;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--surface)">
+      <div style="display:flex;align-items:center;gap:12px;min-width:0">
+        <button onclick="closeProductAnalytics()" style="background:none;border:none;cursor:pointer;color:var(--text3);padding:4px 8px;font-size:13px;display:flex;align-items:center;gap:4px">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          Back
+        </button>
+
+        <div id="pa-icon" style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid var(--border)">📦</div>
+
+        <div style="min-width:0">
+          <div id="pa-title" style="font-size:20px;font-weight:800;color:var(--text);line-height:1.1">Product Name</div>
+          <div id="pa-subtitle" style="font-size:12px;color:var(--text3);margin-top:4px">Category • Brand</div>
+        </div>
+
+        <span id="pa-status-badge" class="badge badge-green" style="margin-left:6px">Active</span>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+        <button id="pa-edit-btn" onclick="editProductFromAnalytics()" style="padding:8px 14px;font-size:12px;font-weight:600;border:1.5px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--primary);cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 1px 0 rgba(255,255,255,0.5) inset">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit Product
+        </button>
+        <button class="pbi-close" onclick="closeProductAnalytics()">✕</button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div style="display:flex;gap:0;border-bottom:1px solid var(--border);flex-shrink:0;padding:0 24px;background:linear-gradient(180deg,var(--surface),var(--surface2))">
+      <button class="pa-tab active" onclick="switchPaTab('overview',this)" style="padding:12px 16px;font-size:13px;font-weight:700;border:none;background:none;cursor:pointer;color:var(--primary);border-bottom:2px solid var(--primary);margin-bottom:-1px">Overview</button>
+      <button class="pa-tab" onclick="switchPaTab('inventory',this)" style="padding:12px 16px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1px">Inventory</button>
+      <button class="pa-tab" onclick="switchPaTab('details',this)" style="padding:12px 16px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1px">Details</button>
+      <button class="pa-tab" onclick="switchPaTab('modules',this)"
+         style="padding:12px 16px;font-size:13px;font-weight:600;border:none;background:none;
+         cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;
+         margin-bottom:-1px;display:flex;align-items:center;gap:5px">
+         <span style="font-size:11px">⚡</span> Modules
+</button>
+    </div>
+
+    <!-- Scrollable Body -->
+    <div style="overflow-y:auto;flex:1;padding:20px 24px;display:flex;flex-direction:column;gap:18px" id="pa-body">
+
+      <!-- TAB: OVERVIEW -->
+      <div id="pa-tab-overview">
+
+        <!-- KPI Row -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px">
+          <div style="background:#f8fbff;border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 1px 0 rgba(255,255,255,0.7) inset">
+            <div style="font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:600">Selling Price</div>
+            <div id="pa-kpi-price" style="font-size:22px;font-weight:800;color:var(--text)">—</div>
+            <div style="font-size:11px;color:var(--success);margin-top:6px">↑ Live price</div>
+          </div>
+          <div style="background:#fffaf7;border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 1px 0 rgba(255,255,255,0.7) inset">
+            <div style="font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:600">Cost Price</div>
+            <div id="pa-kpi-cost" style="font-size:22px;font-weight:800;color:var(--text)">—</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:6px">Purchase cost</div>
+          </div>
+          <div style="background:#f8fbff;border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 1px 0 rgba(255,255,255,0.7) inset">
+            <div style="font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:600">Units Sold</div>
+            <div id="pa-kpi-sold" style="font-size:22px;font-weight:800;color:var(--text)">—</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:6px">Across all markets</div>
+          </div>
+          <div style="background:#f8fbff;border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 1px 0 rgba(255,255,255,0.7) inset;display:flex;justify-content:space-between;gap:10px;align-items:end">
+            <div>
+              <div style="font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:600">Days in Stock</div>
+              <div id="pa-kpi-days" style="font-size:22px;font-weight:800;color:var(--text)">—</div>
+            </div>
+            <span id="pa-kpi-stock-label" class="badge badge-green" style="font-size:11px">Healthy</span>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:18px">
+
+          <!-- Sales Trend -->
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <div style="font-size:15px;font-weight:800;color:var(--text)">Sales Trend</div>
+              <div style="display:flex;gap:6px">
+                <button class="pa-period-btn active" onclick="setPeriod('3m',this)" style="padding:4px 10px;font-size:11px;border-radius:7px;border:1px solid var(--border);background:var(--primary);color:#fff;cursor:pointer;font-weight:700">3M</button>
+                <button class="pa-period-btn" onclick="setPeriod('6m',this)" style="padding:4px 10px;font-size:11px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text3);cursor:pointer;font-weight:700">6M</button>
+                <button class="pa-period-btn" onclick="setPeriod('1y',this)" style="padding:4px 10px;font-size:11px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text3);cursor:pointer;font-weight:700">1Y</button>
+              </div>
+            </div>
+            <div style="position:relative;height:210px">
+              <canvas id="pa-sales-chart" style="width:100%;height:210px"></canvas>
+            </div>
+          </div>
+
+          <!-- Profitability -->
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px">
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px">Profitability</div>
+            <div style="position:relative;display:flex;align-items:center;justify-content:center;height:160px;margin-bottom:10px">
+              <canvas id="pa-donut-chart" style="width:160px;height:160px"></canvas>
+              <div style="position:absolute;text-align:center">
+                <div id="pa-donut-center" style="font-size:26px;font-weight:800;color:var(--text)">—</div>
+                <div style="font-size:11px;color:var(--text3)">Margin</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--text3)">● Revenue</span><span id="pa-leg-revenue" style="font-weight:700;color:var(--text)">—</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--text3)">● Cost</span><span id="pa-leg-cost" style="font-weight:700;color:var(--text)">—</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--text3)">● Gross Profit</span><span id="pa-leg-profit" style="font-weight:700;color:var(--text)">—</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--text3)">● Margin</span><span id="pa-leg-margin" style="font-weight:700;color:var(--text)">—</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monthly Units / Category / Inventory Blocks -->
+        <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-bottom:18px">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px">
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px">Monthly Units Sold</div>
+            <div style="position:relative;height:220px">
+              <canvas id="pa-bar-chart" style="width:100%;height:220px"></canvas>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px">
+              <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px">Inventory Overview</div>
+              <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px">
+                  <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Available</div>
+                  <div id="pa-inv-available" style="font-size:16px;font-weight:800;color:var(--text)">—</div>
+                </div>
+                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px">
+                  <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Reserved</div>
+                  <div id="pa-inv-reserved" style="font-size:16px;font-weight:800;color:var(--text)">—</div>
+                </div>
+                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px">
+                  <div style="font-size:11px;color:var(--text3);margin-bottom:4px">In Transit</div>
+                  <div id="pa-inv-transit" style="font-size:16px;font-weight:800;color:var(--text)">—</div>
+                </div>
+                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px">
+                  <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Total</div>
+                  <div id="pa-inv-total" style="font-size:16px;font-weight:800;color:var(--text)">—</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transactions -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-size:15px;font-weight:800;color:var(--text)">Simulated Transactions</div>
+            <span style="font-size:11px;color:var(--text3);background:var(--surface2);padding:4px 8px;border-radius:7px;border:1px solid var(--border)">Demo Data</span>
+          </div>
+
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:12px">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border)">
+                  <th style="text-align:left;padding:8px 10px;color:var(--text3);font-weight:700">Date</th>
+                  <th style="text-align:left;padding:8px 10px;color:var(--text3);font-weight:700">Type</th>
+                  <th style="text-align:right;padding:8px 10px;color:var(--text3);font-weight:700">Qty</th>
+                  <th style="text-align:right;padding:8px 10px;color:var(--text3);font-weight:700">Unit Price</th>
+                  <th style="text-align:right;padding:8px 10px;color:var(--text3);font-weight:700">Total</th>
+                </tr>
+              </thead>
+              <tbody id="pa-transactions-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: INVENTORY -->
+      <div id="pa-tab-inventory" style="display:none">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px">
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:14px">Inventory Breakdown</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--border)">
+                <span style="font-size:12px;color:var(--text3)">Available Stock</span>
+                <span id="inv-available" style="font-size:12px;font-weight:800;color:var(--success)">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--border)">
+                <span style="font-size:12px;color:var(--text3)">Reserved (Orders)</span>
+                <span id="inv-reserved" style="font-size:12px;font-weight:800;color:var(--warning)">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--border)">
+                <span style="font-size:12px;color:var(--text3)">In Transit</span>
+                <span id="inv-transit" style="font-size:12px;font-weight:800;color:var(--primary)">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between">
+                <span style="font-size:12px;font-weight:700;color:var(--text)">Total Stock</span>
+                <span id="inv-total" style="font-size:12px;font-weight:800;color:var(--text)">—</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px">
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:14px">Stock Progress</div>
+            <div id="inv-bar-container" style="display:flex;flex-direction:column;gap:12px"></div>
+          </div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px">
+          <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:14px">Distribution by Market</div>
+          <div id="inv-market-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px"></div>
+        </div>
+      </div>
+
+      <!-- TAB: DETAILS -->
+      <div id="pa-tab-details" style="display:none">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px">
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:14px">Product Information</div>
+            <div id="det-info-table" style="display:flex;flex-direction:column;gap:8px"></div>
+          </div>
+
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px">
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:14px">Description</div>
+            <div id="det-desc" style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:16px"></div>
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:10px">Quick Stats</div>
+            <div id="det-quick-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- TAB: MODULES -->
+      <!-- TAB: MODULES -->
+<div id="pa-tab-modules" style="display:none">
+
+  <div style="font-size:16px;font-weight:800;margin-bottom:14px">
+    ⚡ Operational Intelligence Modules
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+    <div onclick="openPurchaseModule(paCurrentProduct?.id)"
+         style="padding:18px;border:1px solid var(--border);border-radius:14px;
+                background:#f8fbff;cursor:pointer;font-weight:700">
+      🛒 Purchase Intelligence
+    </div>
+
+    <div onclick="openInventoryModule(paCurrentProduct?.id)"
+         style="padding:18px;border:1px solid var(--border);border-radius:14px;
+                background:#fffaf7;cursor:pointer;font-weight:700">
+      📦 Inventory Control
+    </div>
+
+    <div onclick="openRetailModule(paCurrentProduct?.id)"
+         style="padding:18px;border:1px solid var(--border);border-radius:14px;
+                background:#f0fdf4;cursor:pointer;font-weight:700">
+      🏪 Retail Operations
+    </div>
+
+    <div onclick="openDecisionModule(paCurrentProduct?.id)"
+         style="padding:18px;border:1px solid var(--border);border-radius:14px;
+                background:#faf5ff;cursor:pointer;font-weight:700">
+      🧠 Decision Support
+    </div>
+
+  </div>
+
+</div>
+
+
+    <!-- Footer -->
+    <div style="padding:12px 24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;background:var(--surface2)">
+      <span id="pa-footer-info" style="font-size:12px;color:var(--text3)">Product Analytics · Jan &amp; Bros Portal</span>
+      <a id="pa-janbros-link" href="https://www.janbros.com" target="_blank" style="font-size:12px;color:var(--primary);text-decoration:none;display:flex;align-items:center;gap:4px">
+        View on janbros.com
+        <svg fill="none" height="11" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="11"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+      </a>
+    </div>
+  </div>
+</div>

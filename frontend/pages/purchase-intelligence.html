@@ -1,0 +1,181 @@
+<div class="page" id="page-purchase-intelligence">
+  <div class="page-header-bar">
+    <div>
+      <h2 class="page-title">Purchase Intelligence</h2>
+      <p class="page-sub" style="color:var(--text2);font-size:13px;margin-top:2px">Odoo-integrated smart purchasing insights & recommendations</p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="odoo-badge"><span class="odoo-dot"></span>Odoo Live</div>
+      <button class="btn-primary-sm" onclick="refreshPurchaseData()">↻ Sync Odoo</button>
+    </div>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="stats-grid" style="margin-bottom:20px">
+    <div class="stat-card">
+      <div class="stat-card-icon" style="background:rgba(26,86,219,0.1)">🛒</div>
+      <div class="stat-card-val">AED 2.4M</div>
+      <div class="stat-card-label">Total Purchase Value</div>
+      <div class="stat-card-trend trend-up">↑ 6.2% vs last month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon" style="background:rgba(16,185,129,0.1)">📊</div>
+      <div class="stat-card-val">87.3%</div>
+      <div class="stat-card-label">Avg Supplier Performance</div>
+      <div class="stat-card-trend trend-up">↑ 2.1% this quarter</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon" style="background:rgba(245,158,11,0.1)">⚡</div>
+      <div class="stat-card-val">34</div>
+      <div class="stat-card-label">Fast-Moving SKUs</div>
+      <div class="stat-card-trend trend-up">↑ 8 new this month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon" style="background:rgba(139,92,246,0.1)">📉</div>
+      <div class="stat-card-val">18.6%</div>
+      <div class="stat-card-label">Avg Gross Margin</div>
+      <div class="stat-card-trend trend-down">↓ 0.4% vs last month</div>
+    </div>
+  </div>
+
+  <!-- Purchase vs Sales Trends + Supplier Performance -->
+  <div class="two-col" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Purchase vs Sales Trends</span>
+        <select class="mini-select" onchange="updatePurchaseTrend(this.value)">
+          <option value="6m">Last 6 Months</option>
+          <option value="3m">Last 3 Months</option>
+          <option value="12m">Last 12 Months</option>
+        </select>
+      </div>
+      <div class="trend-chart-wrap">
+        <div class="trend-legend">
+          <span class="tl-item"><span class="tl-dot" style="background:#1A56DB"></span>Purchases</span>
+          <span class="tl-item"><span class="tl-dot" style="background:#10B981"></span>Sales</span>
+        </div>
+        <div class="bar-chart" style="gap:6px" id="purchase-trend-chart">
+          <div class="bar-wrap bar-duo"><div style="display:flex;gap:3px;align-items:flex-end;height:100%"><div class="bar" style="height:60%;background:#1A56DB;width:18px;border-radius:4px 4px 0 0"></div><div class="bar" style="height:72%;background:#10B981;width:18px;border-radius:4px 4px 0 0"></div></div><div class="bar-label">Oct</div></div>
+          <div class="bar-wrap bar-duo"><div style="display:flex;gap:3px;align-items:flex-end;height:100%"><div class="bar" style="height:75%;background:#1A56DB;width:18px;border-radius:4px 4px 0 0"></div><div class="bar" style="height:68%;background:#10B981;width:18px;border-radius:4px 4px 0 0"></div></div><div class="bar-label">Nov</div></div>
+          <div class="bar-wrap bar-duo"><div style="display:flex;gap:3px;align-items:flex-end;height:100%"><div class="bar" style="height:88%;background:#1A56DB;width:18px;border-radius:4px 4px 0 0"></div><div class="bar" style="height:92%;background:#10B981;width:18px;border-radius:4px 4px 0 0"></div></div><div class="bar-label">Dec</div></div>
+          <div class="bar-wrap bar-duo"><div style="display:flex;gap:3px;align-items:flex-end;height:100%"><div class="bar" style="height:52%;background:#1A56DB;width:18px;border-radius:4px 4px 0 0"></div><div class="bar" style="height:65%;background:#10B981;width:18px;border-radius:4px 4px 0 0"></div></div><div class="bar-label">Jan</div></div>
+          <div class="bar-wrap bar-duo"><div style="display:flex;gap:3px;align-items:flex-end;height:100%"><div class="bar" style="height:70%;background:#1A56DB;width:18px;border-radius:4px 4px 0 0"></div><div class="bar" style="height:78%;background:#10B981;width:18px;border-radius:4px 4px 0 0"></div></div><div class="bar-label">Feb</div></div>
+          <div class="bar-wrap bar-duo"><div style="display:flex;gap:3px;align-items:flex-end;height:100%"><div class="bar" style="height:80%;background:#1A56DB;width:18px;border-radius:4px 4px 0 0"></div><div class="bar" style="height:85%;background:#10B981;width:18px;border-radius:4px 4px 0 0"></div></div><div class="bar-label">Mar</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Supplier Performance</span>
+        <span class="card-action">Full Report →</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="supplier-row">
+          <div class="supplier-info"><span class="supplier-name">Al Rawabi Dairy</span><span class="supplier-tag tag-green">Top</span></div>
+          <div style="flex:1;margin:0 14px"><div class="progress-bar"><div class="progress-fill" style="width:96%;background:#10B981"></div></div></div>
+          <span class="supplier-score">96%</span>
+        </div>
+        <div class="supplier-row">
+          <div class="supplier-info"><span class="supplier-name">Pepsico MENA</span><span class="supplier-tag tag-blue">Good</span></div>
+          <div style="flex:1;margin:0 14px"><div class="progress-bar"><div class="progress-fill" style="width:89%;background:#1A56DB"></div></div></div>
+          <span class="supplier-score">89%</span>
+        </div>
+        <div class="supplier-row">
+          <div class="supplier-info"><span class="supplier-name">Unilever Gulf</span><span class="supplier-tag tag-blue">Good</span></div>
+          <div style="flex:1;margin:0 14px"><div class="progress-bar"><div class="progress-fill" style="width:84%;background:#1A56DB"></div></div></div>
+          <span class="supplier-score">84%</span>
+        </div>
+        <div class="supplier-row">
+          <div class="supplier-info"><span class="supplier-name">Nestlé KSA</span><span class="supplier-tag tag-yellow">Fair</span></div>
+          <div style="flex:1;margin:0 14px"><div class="progress-bar"><div class="progress-fill" style="width:72%;background:#F59E0B"></div></div></div>
+          <span class="supplier-score">72%</span>
+        </div>
+        <div class="supplier-row">
+          <div class="supplier-info"><span class="supplier-name">LocalMed Pharma</span><span class="supplier-tag tag-red">Low</span></div>
+          <div style="flex:1;margin:0 14px"><div class="progress-bar"><div class="progress-fill" style="width:58%;background:#EF4444"></div></div></div>
+          <span class="supplier-score">58%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stock Coverage + Fast/Slow Moving + AI Recommendations -->
+  <div class="three-col" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-header"><span class="card-title">Stock Coverage (Days)</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+        <div class="coverage-item"><span class="cov-label">Toothpaste</span><span class="cov-days good">42 days</span></div>
+        <div class="coverage-item"><span class="cov-label">Vitamin C</span><span class="cov-days good">38 days</span></div>
+        <div class="coverage-item"><span class="cov-label">Wheat Flour</span><span class="cov-days warn">14 days</span></div>
+        <div class="coverage-item"><span class="cov-label">Sugar 5kg</span><span class="cov-days warn">11 days</span></div>
+        <div class="coverage-item"><span class="cov-label">Women Kurti</span><span class="cov-days danger">5 days</span></div>
+        <div class="coverage-item"><span class="cov-label">Face Wash</span><span class="cov-days good">60 days</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="card-title">Fast vs Slow Movers</span></div>
+      <div class="fm-section">
+        <div class="fm-header fast">⚡ Fast Moving (Top 5)</div>
+        <div class="fm-item">Toothpaste <span>12.4K/mo</span></div>
+        <div class="fm-item">Vitamin C Tabs <span>9.8K/mo</span></div>
+        <div class="fm-item">Hand Wash 500ml <span>8.1K/mo</span></div>
+        <div class="fm-item">Wheat Flour 1kg <span>7.6K/mo</span></div>
+        <div class="fm-item">Sugar 5kg <span>6.9K/mo</span></div>
+      </div>
+      <div class="fm-section" style="margin-top:10px">
+        <div class="fm-header slow">🐢 Slow Moving (Review)</div>
+        <div class="fm-item slow-item">Industrial Gloves <span>0.3K/mo</span></div>
+        <div class="fm-item slow-item">Luxury Perfume <span>0.2K/mo</span></div>
+        <div class="fm-item slow-item">Paper Towel Bulk <span>0.4K/mo</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="card-title">AI Purchase Recommendations</span><span class="ai-badge">AI</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="rec-card rec-urgent">
+          <div class="rec-icon">🚨</div>
+          <div><div class="rec-title">Women Kurti — Reorder Now</div><div class="rec-detail">Only 5 days stock left. Suggest 2,000 units from Supplier A.</div></div>
+        </div>
+        <div class="rec-card rec-warn">
+          <div class="rec-icon">⚠️</div>
+          <div><div class="rec-title">Wheat Flour — Plan Reorder</div><div class="rec-detail">14 days coverage. Consider ordering 5,000 bags this week.</div></div>
+        </div>
+        <div class="rec-card rec-info">
+          <div class="rec-icon">💡</div>
+          <div><div class="rec-title">Face Wash — Excess Stock</div><div class="rec-detail">60 days stock. Defer next PO by 3 weeks to optimize cash.</div></div>
+        </div>
+        <div class="rec-card rec-ok">
+          <div class="rec-icon">✅</div>
+          <div><div class="rec-title">Toothpaste — On Track</div><div class="rec-detail">42 days coverage. Current PO schedule is optimal.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Margin Tracking Table -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Margin Tracking by SKU</span>
+      <div style="display:flex;gap:8px">
+        <input class="mini-search" placeholder="Search SKU..." oninput="filterMarginTable(this.value)">
+        <button class="btn-primary-sm">Export CSV</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table" id="margin-table">
+        <thead><tr><th>SKU</th><th>Category</th><th>Buy Price</th><th>Sell Price</th><th>Margin %</th><th>Trend</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Toothpaste 150ml</strong></td><td>Pharma</td><td>AED 3.20</td><td>AED 8.50</td><td><span class="margin-pill good">37.6%</span></td><td>↑ 1.2%</td><td><span class="status-badge active">Healthy</span></td></tr>
+          <tr><td><strong>Vitamin C 500mg</strong></td><td>Pharma</td><td>AED 12.00</td><td>AED 28.00</td><td><span class="margin-pill good">57.1%</span></td><td>↑ 3.4%</td><td><span class="status-badge active">Healthy</span></td></tr>
+          <tr><td><strong>Wheat Flour 1kg</strong></td><td>Grocery</td><td>AED 1.80</td><td>AED 3.50</td><td><span class="margin-pill warn">48.6%</span></td><td>↓ 0.8%</td><td><span class="status-badge review">Watch</span></td></tr>
+          <tr><td><strong>Sugar 5kg</strong></td><td>Grocery</td><td>AED 8.00</td><td>AED 14.00</td><td><span class="margin-pill warn">42.9%</span></td><td>↓ 2.1%</td><td><span class="status-badge review">Watch</span></td></tr>
+          <tr><td><strong>Women Kurti (M)</strong></td><td>Clothing</td><td>AED 22.00</td><td>AED 38.00</td><td><span class="margin-pill danger">42.1%</span></td><td>↓ 4.3%</td><td><span class="status-badge danger-badge">At Risk</span></td></tr>
+          <tr><td><strong>Hand Wash 500ml</strong></td><td>FMCG</td><td>AED 4.50</td><td>AED 9.75</td><td><span class="margin-pill good">53.8%</span></td><td>↑ 0.5%</td><td><span class="status-badge active">Healthy</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

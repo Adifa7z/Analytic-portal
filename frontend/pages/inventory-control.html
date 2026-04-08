@@ -1,0 +1,187 @@
+<div class="page" id="page-inventory-control">
+  <div class="page-header-bar">
+    <div>
+      <h2 class="page-title">Inventory Control & Physical Stock Monitoring</h2>
+      <p class="page-sub" style="color:var(--text2);font-size:13px;margin-top:2px">ERP vs Physical variance tracking, damage control & reconciliation — Odoo integrated</p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="odoo-badge"><span class="odoo-dot"></span>Odoo Live</div>
+      <button class="btn-primary-sm" onclick="startReconciliation()">+ New Reconciliation</button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="stats-grid" style="margin-bottom:20px">
+    <div class="stat-card">
+      <div class="stat-card-icon" style="background:rgba(239,68,68,0.1)">📦</div>
+      <div class="stat-card-val">1,243</div>
+      <div class="stat-card-label">ERP vs Physical Variance</div>
+      <div class="stat-card-trend trend-down">↑ 142 units discrepancy</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon" style="background:rgba(245,158,11,0.1)">🔥</div>
+      <div class="stat-card-val">AED 18.4K</div>
+      <div class="stat-card-label">Damage Loss (This Month)</div>
+      <div class="stat-card-trend trend-down">↑ AED 3.2K from last month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon" style="background:rgba(139,92,246,0.1)">🗃️</div>
+      <div class="stat-card-val">89</div>
+      <div class="stat-card-label">Aging Stock Items (&gt;90d)</div>
+      <div class="stat-card-trend trend-down">↓ 12 resolved this week</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon" style="background:rgba(16,185,129,0.1)">✅</div>
+      <div class="stat-card-val">94.2%</div>
+      <div class="stat-card-label">Inventory Accuracy Rate</div>
+      <div class="stat-card-trend trend-up">↑ 1.8% after last audit</div>
+    </div>
+  </div>
+
+  <!-- Variance Table + Shrinkage Chart -->
+  <div class="two-col" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">ERP vs Physical Stock Variance</span>
+        <select class="mini-select">
+          <option>All Warehouses</option>
+          <option>Dubai</option>
+          <option>Abu Dhabi</option>
+          <option>Chennai</option>
+          <option>Kolkata</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Product</th><th>ERP Qty</th><th>Physical</th><th>Variance</th><th>Value Gap</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Toothpaste 150ml</strong></td>
+              <td>33,500</td><td>33,210</td>
+              <td><span class="var-pill negative">-290</span></td>
+              <td style="color:var(--danger)">-AED 928</td>
+              <td><button class="mini-btn" onclick="openRecon('Toothpaste')">Reconcile</button></td>
+            </tr>
+            <tr>
+              <td><strong>Vitamin C 500mg</strong></td>
+              <td>12,900</td><td>12,956</td>
+              <td><span class="var-pill positive">+56</span></td>
+              <td style="color:var(--success)">+AED 672</td>
+              <td><button class="mini-btn" onclick="openRecon('Vitamin C')">Verify</button></td>
+            </tr>
+            <tr>
+              <td><strong>Wheat Flour 1kg</strong></td>
+              <td>5,400</td><td>5,180</td>
+              <td><span class="var-pill negative">-220</span></td>
+              <td style="color:var(--danger)">-AED 396</td>
+              <td><button class="mini-btn" onclick="openRecon('Wheat Flour')">Reconcile</button></td>
+            </tr>
+            <tr>
+              <td><strong>Hand Wash 500ml</strong></td>
+              <td>8,100</td><td>8,095</td>
+              <td><span class="var-pill neutral">-5</span></td>
+              <td style="color:var(--text2)">-AED 22</td>
+              <td><button class="mini-btn">OK</button></td>
+            </tr>
+            <tr>
+              <td><strong>Women Kurti (M)</strong></td>
+              <td>890</td><td>763</td>
+              <td><span class="var-pill negative">-127</span></td>
+              <td style="color:var(--danger)">-AED 2,794</td>
+              <td><button class="mini-btn" onclick="openRecon('Kurti')">Reconcile</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="card-title">Shrinkage & Wastage by Category</span></div>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>FMCG</span><span style="color:var(--danger);font-weight:600">AED 6,240 — Expiry</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:72%;background:#EF4444"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>Pharma</span><span style="color:var(--warning);font-weight:600">AED 4,100 — Damage</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:48%;background:#F59E0B"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>Grocery</span><span style="color:var(--warning);font-weight:600">AED 3,900 — Spoilage</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:44%;background:#F59E0B"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>Clothing</span><span style="color:var(--text2);font-weight:600">AED 2,800 — Theft/Loss</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:32%;background:#8B5CF6"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>Electronics</span><span style="color:var(--text2);font-weight:600">AED 1,360 — Breakage</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:16%;background:#06B6D4"></div></div>
+        </div>
+      </div>
+      <div class="damage-cats" style="margin-top:18px">
+        <div class="card-title" style="font-size:13px;margin-bottom:10px">Wastage Categorization</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span class="waste-tag" style="background:rgba(239,68,68,0.1);color:#EF4444">🗓 Expiry — AED 6.2K</span>
+          <span class="waste-tag" style="background:rgba(245,158,11,0.1);color:#D97706">💥 Damage — AED 5.1K</span>
+          <span class="waste-tag" style="background:rgba(139,92,246,0.1);color:#7C3AED">🔍 Theft/Shrinkage — AED 3.8K</span>
+          <span class="waste-tag" style="background:rgba(6,182,212,0.1);color:#0E7490">🌡 Spoilage — AED 3.3K</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stock Aging + Reconciliation Workflow -->
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Stock Aging Analysis</span>
+        <span class="card-action">Export →</span>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:14px">
+        <div class="aging-pill" style="background:rgba(16,185,129,0.1);color:#059669">0–30 days<br><strong>62%</strong></div>
+        <div class="aging-pill" style="background:rgba(245,158,11,0.1);color:#D97706">31–60 days<br><strong>21%</strong></div>
+        <div class="aging-pill" style="background:rgba(239,68,68,0.1);color:#DC2626">61–90 days<br><strong>11%</strong></div>
+        <div class="aging-pill" style="background:rgba(139,92,246,0.1);color:#7C3AED">&gt;90 days<br><strong>6%</strong></div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Product</th><th>Age</th><th>Qty</th><th>Value</th><th>Risk</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Luxury Perfume</strong></td><td>124 days</td><td>340 units</td><td>AED 21,400</td><td><span class="status-badge danger-badge">High</span></td></tr>
+            <tr><td><strong>Industrial Gloves</strong></td><td>98 days</td><td>1,200 units</td><td>AED 4,800</td><td><span class="status-badge review">Medium</span></td></tr>
+            <tr><td><strong>Paper Towel Bulk</strong></td><td>82 days</td><td>540 units</td><td>AED 2,160</td><td><span class="status-badge review">Medium</span></td></tr>
+            <tr><td><strong>Face Mask (Cloth)</strong></td><td>67 days</td><td>2,100 units</td><td>AED 6,300</td><td><span class="status-badge review">Medium</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="card-title">Reconciliation Workflows</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="recon-item done">
+          <div class="recon-status-dot done-dot"></div>
+          <div><div class="recon-name">Dubai Warehouse — Full Count</div><div class="recon-meta">Completed 2 Apr 2026 • 3,241 SKUs reconciled</div></div>
+          <span class="status-badge active" style="margin-left:auto">Done</span>
+        </div>
+        <div class="recon-item inprog">
+          <div class="recon-status-dot prog-dot"></div>
+          <div><div class="recon-name">Abu Dhabi — Zone B Spot Check</div><div class="recon-meta">In Progress • 840/1,200 SKUs counted</div></div>
+          <span class="status-badge review" style="margin-left:auto">In Progress</span>
+        </div>
+        <div class="recon-item pending">
+          <div class="recon-status-dot pend-dot"></div>
+          <div><div class="recon-name">Chennai — Quarterly Audit</div><div class="recon-meta">Scheduled 10 Apr 2026 • Clothing + Grocery</div></div>
+          <span class="status-badge" style="margin-left:auto;background:var(--surface2);color:var(--text2)">Pending</span>
+        </div>
+        <div class="recon-item pending">
+          <div class="recon-status-dot pend-dot"></div>
+          <div><div class="recon-name">Kolkata — Pharma Stock Count</div><div class="recon-meta">Scheduled 15 Apr 2026</div></div>
+          <span class="status-badge" style="margin-left:auto;background:var(--surface2);color:var(--text2)">Pending</span>
+        </div>
+        <button class="btn-primary-sm" style="width:100%;margin-top:6px;justify-content:center" onclick="startReconciliation()">+ Schedule New Reconciliation</button>
+      </div>
+    </div>
+  </div>
+</div>

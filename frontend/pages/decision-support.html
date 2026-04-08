@@ -1,0 +1,240 @@
+<div class="page" id="page-decision-support">
+  <div class="page-header-bar">
+    <div>
+      <h2 class="page-title">Decision Support Reports & Control Panels</h2>
+      <p class="page-sub" style="color:var(--text2);font-size:13px;margin-top:2px">Price changes, SKU performance, supplier analytics & operational alerts — Odoo integrated</p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="odoo-badge"><span class="odoo-dot"></span>Odoo Live</div>
+      <button class="btn-primary-sm" onclick="runAIAnalysis()">🤖 Run AI Analysis</button>
+    </div>
+  </div>
+
+  <!-- Alert Banner -->
+  <div class="alert-banner" id="ds-alert-banner">
+    <span>🚨</span>
+    <span><strong>3 Critical Alerts:</strong> Price change detected on 2 suppliers · 1 SKU margin dropped below threshold · Sugar 5kg reorder overdue</span>
+    <button class="alert-dismiss" onclick="document.getElementById('ds-alert-banner').style.display='none'">✕</button>
+  </div>
+
+  <!-- Operational Alerts Grid -->
+  <div class="alerts-grid" style="margin-bottom:20px">
+    <div class="alert-card critical">
+      <div class="alert-card-icon">💰</div>
+      <div class="alert-card-body">
+        <div class="alert-card-title">Supplier Price Change</div>
+        <div class="alert-card-detail">Unilever Gulf raised Hand Wash prices by <strong>+8.4%</strong>. Impact: AED 12,400/month margin loss.</div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="mini-btn-danger">Negotiate</button>
+          <button class="mini-btn">Find Alt. Supplier</button>
+        </div>
+      </div>
+      <span class="alert-severity crit">Critical</span>
+    </div>
+    <div class="alert-card warning">
+      <div class="alert-card-icon">📉</div>
+      <div class="alert-card-body">
+        <div class="alert-card-title">SKU Margin Below Threshold</div>
+        <div class="alert-card-detail">Electronics: Tablet SKU GP dropped to <strong>9.2%</strong> (threshold: 12%). Review pricing strategy.</div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="mini-btn-warn">Adjust Price</button>
+          <button class="mini-btn">View SKU</button>
+        </div>
+      </div>
+      <span class="alert-severity warn">Warning</span>
+    </div>
+    <div class="alert-card info-alert">
+      <div class="alert-card-icon">🔄</div>
+      <div class="alert-card-body">
+        <div class="alert-card-title">Reorder Overdue</div>
+        <div class="alert-card-detail">Sugar 5kg: PO was due <strong>3 days ago</strong>. Current stock: 4.2 days coverage.</div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="mini-btn-blue">Create PO in Odoo</button>
+        </div>
+      </div>
+      <span class="alert-severity info">Action Needed</span>
+    </div>
+  </div>
+
+  <!-- Price Change Monitor + SKU Performance -->
+  <div class="two-col" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Price Change Monitor</span>
+        <select class="mini-select">
+          <option>Last 30 Days</option>
+          <option>Last 7 Days</option>
+          <option>Last 90 Days</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>SKU / Supplier</th><th>Old Price</th><th>New Price</th><th>Change</th><th>Impact/Month</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Hand Wash 500ml</strong><br><span style="color:var(--text3);font-size:11px">Unilever Gulf</span></td>
+              <td>AED 4.50</td><td>AED 4.88</td>
+              <td><span class="price-change up">↑ +8.4%</span></td>
+              <td style="color:var(--danger)">-AED 12.4K</td>
+              <td><span class="status-badge danger-badge">Critical</span></td>
+            </tr>
+            <tr>
+              <td><strong>Vitamin C 500mg</strong><br><span style="color:var(--text3);font-size:11px">LocalMed Pharma</span></td>
+              <td>AED 12.00</td><td>AED 11.40</td>
+              <td><span class="price-change down">↓ -5.0%</span></td>
+              <td style="color:var(--success)">+AED 4.8K</td>
+              <td><span class="status-badge active">Favorable</span></td>
+            </tr>
+            <tr>
+              <td><strong>Wheat Flour 1kg</strong><br><span style="color:var(--text3);font-size:11px">Al Ghurair Foods</span></td>
+              <td>AED 1.80</td><td>AED 1.95</td>
+              <td><span class="price-change up">↑ +8.3%</span></td>
+              <td style="color:var(--danger)">-AED 2.1K</td>
+              <td><span class="status-badge review">Watch</span></td>
+            </tr>
+            <tr>
+              <td><strong>Toothpaste 150ml</strong><br><span style="color:var(--text3);font-size:11px">Al Rawabi Dairy</span></td>
+              <td>AED 3.20</td><td>AED 3.20</td>
+              <td><span class="price-change neutral">— 0.0%</span></td>
+              <td style="color:var(--text2)">No change</td>
+              <td><span class="status-badge active">Stable</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">SKU Performance Dashboard</span>
+        <div style="display:flex;gap:6px">
+          <button class="mini-filter-btn active-filter" onclick="filterSkuPerf(this,'all')">All</button>
+          <button class="mini-filter-btn" onclick="filterSkuPerf(this,'top')">Top</button>
+          <button class="mini-filter-btn" onclick="filterSkuPerf(this,'risk')">At Risk</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px" id="sku-perf-list">
+        <div class="sku-perf-item" data-cat="top">
+          <div class="sku-rank rank-gold">1</div>
+          <div style="flex:1"><div class="sku-perf-name">Toothpaste 150ml</div><div class="sku-perf-meta">Pharma · 12.4K units/mo</div></div>
+          <div style="text-align:right"><div style="font-weight:700;color:var(--success)">AED 105K</div><div style="font-size:11px;color:var(--text2)">37.6% GP</div></div>
+          <span class="status-badge active">Hot</span>
+        </div>
+        <div class="sku-perf-item" data-cat="top">
+          <div class="sku-rank rank-silver">2</div>
+          <div style="flex:1"><div class="sku-perf-name">Vitamin C 500mg</div><div class="sku-perf-meta">Pharma · 9.8K units/mo</div></div>
+          <div style="text-align:right"><div style="font-weight:700;color:var(--success)">AED 274K</div><div style="font-size:11px;color:var(--text2)">57.1% GP</div></div>
+          <span class="status-badge active">Star</span>
+        </div>
+        <div class="sku-perf-item" data-cat="top">
+          <div class="sku-rank rank-bronze">3</div>
+          <div style="flex:1"><div class="sku-perf-name">Hand Wash 500ml</div><div class="sku-perf-meta">FMCG · 8.1K units/mo</div></div>
+          <div style="text-align:right"><div style="font-weight:700;color:var(--success)">AED 79K</div><div style="font-size:11px;color:var(--text2)">53.8% GP</div></div>
+          <span class="status-badge active">Growing</span>
+        </div>
+        <div class="sku-perf-item" data-cat="risk">
+          <div class="sku-rank" style="background:rgba(239,68,68,0.1);color:#EF4444">!</div>
+          <div style="flex:1"><div class="sku-perf-name">Tablet (Electronics)</div><div class="sku-perf-meta">Electronics · 0.8K units/mo</div></div>
+          <div style="text-align:right"><div style="font-weight:700;color:var(--danger)">AED 12K</div><div style="font-size:11px;color:var(--danger)">9.2% GP</div></div>
+          <span class="status-badge danger-badge">At Risk</span>
+        </div>
+        <div class="sku-perf-item" data-cat="risk">
+          <div class="sku-rank" style="background:rgba(245,158,11,0.1);color:#D97706">⚠</div>
+          <div style="flex:1"><div class="sku-perf-name">Luxury Perfume</div><div class="sku-perf-meta">Personal · 0.2K units/mo</div></div>
+          <div style="text-align:right"><div style="font-weight:700;color:var(--warning)">AED 6K</div><div style="font-size:11px;color:var(--warning)">Slow Mover</div></div>
+          <span class="status-badge review">Review</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supplier Analytics + Operational Control Panel -->
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header"><span class="card-title">Supplier Analytics</span><span class="card-action">Full Report →</span></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Supplier</th><th>On-Time %</th><th>Quality Score</th><th>Price Stability</th><th>Overall</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Al Rawabi Dairy</strong></td><td><span style="color:var(--success)">98%</span></td><td>⭐⭐⭐⭐⭐</td><td><span class="price-change neutral">Stable</span></td><td><span class="kpi-score high">96/100</span></td></tr>
+            <tr><td><strong>Pepsico MENA</strong></td><td><span style="color:var(--success)">94%</span></td><td>⭐⭐⭐⭐½</td><td><span class="price-change neutral">Stable</span></td><td><span class="kpi-score high">89/100</span></td></tr>
+            <tr><td><strong>Unilever Gulf</strong></td><td><span style="color:var(--warning)">87%</span></td><td>⭐⭐⭐⭐</td><td><span class="price-change up">↑ Volatile</span></td><td><span class="kpi-score med">72/100</span></td></tr>
+            <tr><td><strong>Nestlé KSA</strong></td><td><span style="color:var(--warning)">82%</span></td><td>⭐⭐⭐½</td><td><span class="price-change neutral">Stable</span></td><td><span class="kpi-score med">71/100</span></td></tr>
+            <tr><td><strong>LocalMed Pharma</strong></td><td><span style="color:var(--danger)">69%</span></td><td>⭐⭐⭐</td><td><span class="price-change down">↓ Discounting</span></td><td><span class="kpi-score low">58/100</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="card-title">Operational Control Panel</span></div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+
+        <div class="control-section">
+          <div class="control-section-title">📦 Purchasing Controls</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+            <button class="ctrl-btn" onclick="createOdooPO()">Create PO in Odoo</button>
+            <button class="ctrl-btn" onclick="approvePendingPOs()">Approve Pending POs (3)</button>
+            <button class="ctrl-btn" onclick="reviewSupplierContracts()">Review Contracts</button>
+          </div>
+        </div>
+
+        <div class="control-section">
+          <div class="control-section-title">💰 Pricing Controls</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+            <button class="ctrl-btn" onclick="runPriceOptimizer()">Run Price Optimizer</button>
+            <button class="ctrl-btn" onclick="applyPriceChanges()">Apply Approved Changes</button>
+            <button class="ctrl-btn" onclick="generatePriceReport()">Price Change Report</button>
+          </div>
+        </div>
+
+        <div class="control-section">
+          <div class="control-section-title">📊 Reporting Controls</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+            <button class="ctrl-btn" onclick="sendMgmtReport()">📧 Email Management Report</button>
+            <button class="ctrl-btn" onclick="scheduleAutoReport()">⏰ Schedule Auto-Report</button>
+            <button class="ctrl-btn" onclick="exportDashboard()">⬇ Export Dashboard PDF</button>
+          </div>
+        </div>
+
+        <div style="background:linear-gradient(135deg,rgba(26,86,219,0.08),rgba(6,182,212,0.08));border-radius:12px;padding:14px;border:1px solid var(--border)">
+          <div style="font-size:12px;font-weight:600;color:var(--primary);margin-bottom:6px">🔗 Odoo Quick Links</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <a class="odoo-link" href="#" onclick="return false">Purchase Orders</a>
+            <a class="odoo-link" href="#" onclick="return false">Inventory Moves</a>
+            <a class="odoo-link" href="#" onclick="return false">Vendor Bills</a>
+            <a class="odoo-link" href="#" onclick="return false">Stock Valuation</a>
+            <a class="odoo-link" href="#" onclick="return false">Sales Orders</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function filterSkuPerf(btn, cat) {
+  document.querySelectorAll('.mini-filter-btn').forEach(b => b.classList.remove('active-filter'));
+  btn.classList.add('active-filter');
+  document.querySelectorAll('#sku-perf-list .sku-perf-item').forEach(item => {
+    item.style.display = (cat === 'all' || item.dataset.cat === cat) ? 'flex' : 'none';
+  });
+}
+function createOdooPO() { showToast('Opening Odoo Purchase Order creation...'); }
+function approvePendingPOs() { showToast('3 POs approved and synced to Odoo!'); }
+function reviewSupplierContracts() { showToast('Loading supplier contracts from Odoo...'); }
+function runPriceOptimizer() { showToast('AI Price Optimizer running — results in 30 seconds'); }
+function applyPriceChanges() { showToast('2 price changes applied successfully'); }
+function generatePriceReport() { showToast('Generating price change report...'); }
+function sendMgmtReport() { showToast('Management report sent to board@janbros.com'); }
+function scheduleAutoReport() { showToast('Auto-report scheduled: every Monday 8:00 AM'); }
+function exportDashboard() { showToast('Exporting dashboard as PDF...'); }
+function runAIAnalysis() { showToast('🤖 AI analysis running — 12 recommendations in progress...'); }
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#0F172A;color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;z-index:9999;animation:fadeInUp 0.3s ease;box-shadow:0 8px 32px rgba(0,0,0,0.3)';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+</script>

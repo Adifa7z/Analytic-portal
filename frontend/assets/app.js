@@ -9,6 +9,18 @@ async function loadFragment(targetId, url, mode = 'replace') {
   else target.innerHTML = html;
 }
 
+const gradientOptions = [
+  'linear-gradient(135deg,#1A56DB,#60A5FA)',
+  'linear-gradient(135deg,#F59E0B,#D97706)',
+  'linear-gradient(135deg,#EF4444,#B91C1C)',
+  'linear-gradient(135deg,#8B5CF6,#6D28D9)',
+  'linear-gradient(135deg,#06B6D4,#0E7490)',
+  'linear-gradient(135deg,#10B981,#047857)',
+  'linear-gradient(135deg,#EC4899,#BE185D)',
+  'linear-gradient(135deg,#F97316,#C2410C)',
+];
+let selectedGradient = gradientOptions[0];
+
 async function bootstrapPortal() {
   try {
     await loadFragment('auth-container', 'components/auth-login.html', 'append');
@@ -18,12 +30,13 @@ async function bootstrapPortal() {
     await loadFragment('sidebar-container', 'components/sidebar.html');
     await loadFragment('topbar-container', 'components/topbar.html');
 
-    const pages = ['dashboard','analytics','brands','products','inventory','network','reports','spotlight','settings','contact'];
+    const pages = ['dashboard','analytics','brands','products','inventory','network','reports','spotlight','settings','contact','purchase-intelligence','inventory-control','retail-ops','decision-support'];
     await Promise.all(pages.map(p => loadFragment('pages-container', `pages/${p}.html`, 'append')));
 
     await loadFragment('modals-container', 'components/modals/pbi-overlay.html', 'append');
     await loadFragment('modals-container', 'components/modals/city-bi-overlay.html', 'append');
     await loadFragment('modals-container', 'components/modals/brand-detail-overlay.html', 'append');
+    await loadFragment('modals-container', 'components/modals/product-analytics-overlay.html', 'append');
 
     if (typeof translate === 'function') translate();
     if (typeof initProducts === 'function') initProducts();
@@ -335,7 +348,8 @@ function filterBrands(query) {
 }
 
 // ─── PRODUCTS DATA (static — for Products page) ──────────────
-const productsData = [
+let productsData = []; 
+/*
   {name:'Antibacterial Liquid Soap',brand:'reCare Aqua',cat:'Pharmacy',icon:'🧴',desc:'99.9% antibacterial protection. Gentle on skin with moisturizing formula.',sku:'RCA-001',stock:2340,stockPct:92},
   {name:'Vitamin C 500mg Tablets',brand:'WellFit',cat:'Pharmacy',icon:'💊',desc:'Immune support supplement. 30 tablets per pack, daily dose formula.',sku:'WF-102',stock:1890,stockPct:78},
   {name:'Multi-Vitamin Complex',brand:'WellFit',cat:'Pharmacy',icon:'🌿',desc:'Complete daily nutrition with 22 essential vitamins and minerals.',sku:'WF-105',stock:1450,stockPct:65},
@@ -351,7 +365,7 @@ const productsData = [
   {name:'Men Formal Shirt',brand:'Señorita',cat:'Clothing',icon:'👔',desc:'Premium cotton formal shirt. Multiple colors. Slim fit design.',sku:'SEN-320',stock:980,stockPct:50},
   {name:'Floor Cleaner',brand:'Guard',cat:'FMCG',icon:'🧹',desc:'Multi-surface floor cleaner. Kills 99.9% germs. Citrus fragrance.',sku:'GRD-015',stock:1780,stockPct:75},
   {name:'Shampoo (Argan Oil)',brand:'reCare Aqua',cat:'Pharmacy',icon:'💆',desc:'Nourishing argan oil shampoo. Suitable for dry and damaged hair.',sku:'RCA-055',stock:1960,stockPct:82},
-];
+*/
 
 const _editSVG   = `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
 const _deleteSVG = `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
@@ -372,8 +386,9 @@ function _actionBtns(sku) {
     </div>`;
 }
 
-function initProducts() { renderProducts(productsData); }
-
+function initProducts() {
+  loadProductsFromDB();
+}
 function renderProducts(data) {
   const grid = document.getElementById('products-grid');
   if (!grid) return;
@@ -424,26 +439,40 @@ function filterProductsSearch(val) {
 }
 
 // ─── PRODUCT: DELETE ─────────────────────────────────────────
-function deleteProduct(sku) {
+async function deleteProduct(sku) {
   const product = productsData.find(p => p.sku === sku);
   if (!product) return;
-  if (!confirm(`Delete "${product.name}" (${sku})?\n\nThis action cannot be undone.`)) return;
-  const idx = productsData.findIndex(p => p.sku === sku);
-  if (idx !== -1) productsData.splice(idx, 1);
-  renderProducts(productsData);
-  showPortalToast(`"${product.name}" deleted.`, 'error');
+
+  if (!confirm(`Delete "${product.name}"?`)) return;
+
+  await fetch(`/api/products/${product.id}`, {
+    method: 'DELETE'
+  });
+
+  await loadProductsFromDB();
 }
 
 // ─── PRODUCT: MODAL ──────────────────────────────────────────
 const PRODUCT_CATS     = ['Pharmacy','FMCG','Grocery','Clothing','Electronics'];
 const PRODUCT_CAT_ICONS = {Pharmacy:'💊',FMCG:'🛒',Grocery:'🌾',Clothing:'👗',Electronics:'💻'};
-const BRAND_NAMES      = ['reCare Aqua','WellFit','Guard','HomeCare+','Concord','Señorita'];
+let BRAND_NAMES = [];
 
+async function loadBrandsForDropdown() {
+  const res = await fetch('/api/brands');
+  const json = await res.json();
+  BRAND_NAMES = json.data; // [{id, name}]
+}
 function _modalInputStyle() {
   return 'width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--text);font-size:13px;outline:none;box-sizing:border-box;font-family:inherit';
 }
-function openAddProduct()       { _openProductModal(null); }
-function openEditProduct(sku)   { _openProductModal(sku); }
+async function openAddProduct() {
+  await loadBrandsForDropdown();
+  _openProductModal(null);
+}
+async function openEditProduct(sku) {
+  await loadBrandsForDropdown();
+}
+
 
 function _openProductModal(sku) {
   const isEdit  = sku !== null;
@@ -487,10 +516,15 @@ function _openProductModal(sku) {
           </div>
           <div>
             <label style="font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:6px">Brand</label>
-            <select id="pm-brand" style="${s}" oninput="_updatePMPreview()"
-              onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
-              <option value="">— Select Brand —</option>
-              ${brands.map(b => `<option value="${b}" ${product && product.brand===b?'selected':''}>${b}</option>`).join('')}
+            <select id="pm-brand" style="${s}">
+            <option value="">— Select Brand —</option>
+
+            ${(BRAND_NAMES || []).map(b => `
+              <option value="${b.id}" ${product && product.brand_id == b.id ? 'selected' : ''}>
+                ${b.name}
+              </option>
+            `).join('')}
+
             </select>
           </div>
         </div>
@@ -587,45 +621,111 @@ function _autoGenSKU() {
   _updatePMPreview();
 }
 function _updatePMPreview() {
-  const name     = document.getElementById('pm-name')?.value || 'Product Name';
-  const sku      = document.getElementById('pm-sku')?.value || 'SKU';
-  const stock    = document.getElementById('pm-stock')?.value || '0';
-  const icon     = document.getElementById('pm-icon')?.value;
-  const brandEl  = document.getElementById('pm-brand');
-  const brandName= brandEl?.options[brandEl.selectedIndex]?.text || 'BRAND';
-  const cat      = document.getElementById('pm-cat')?.value || 'Pharmacy';
+  const name  = document.getElementById('pm-name')?.value || 'Product Name';
+  const sku   = document.getElementById('pm-sku')?.value || '';
+  const stock = document.getElementById('pm-stock')?.value || '0';
+  const icon  = document.getElementById('pm-icon')?.value;
+
+  const brandEl   = document.getElementById('pm-brand');
+  const brandName = brandEl?.options[brandEl.selectedIndex]?.text || 'BRAND';
+
+  const cat = document.getElementById('pm-cat')?.value || 'Pharmacy';
   const dispIcon = icon || PRODUCT_CAT_ICONS[cat] || '📦';
+
   const el = document.getElementById('pm-prev-icon');
-  if (el) { el.textContent = dispIcon; el.style.background = catColor(cat); }
-  const pn = document.getElementById('pm-prev-name'); if (pn) pn.textContent = name;
-  const pb = document.getElementById('pm-prev-brand'); if (pb) pb.textContent = brandName !== '— Select Brand —' ? brandName.toUpperCase() : 'BRAND';
-  const ps = document.getElementById('pm-prev-sku');   if (ps) ps.textContent = sku + ' · ' + Number(stock).toLocaleString() + ' units';
+  if (el) {
+    el.textContent = dispIcon;
+    el.style.background = catColor(cat);
+  }
+
+  const pn = document.getElementById('pm-prev-name');
+  if (pn) pn.textContent = name;
+
+  const pb = document.getElementById('pm-prev-brand');
+  if (pb) pb.textContent = brandName !== '— Select Brand —' ? brandName.toUpperCase() : 'BRAND';
+
+  const ps = document.getElementById('pm-prev-sku');
+  if (ps) ps.textContent = sku + ' · ' + Number(stock).toLocaleString() + ' units';
 }
-function _saveProductModal(editSku) {
-  const name     = document.getElementById('pm-name')?.value?.trim();
-  const brand    = document.getElementById('pm-brand')?.value || '';
-  const cat      = document.getElementById('pm-cat')?.value;
-  const desc     = document.getElementById('pm-desc')?.value?.trim();
-  const stock    = parseInt(document.getElementById('pm-stock')?.value) || 0;
-  const stockPct = parseInt(document.getElementById('pm-stockpct')?.value) || 0;
-  const sku      = document.getElementById('pm-sku')?.value?.trim();
-  const icon     = document.getElementById('pm-icon')?.value?.trim() || PRODUCT_CAT_ICONS[cat] || '📦';
-  if (!name || !sku || !cat || document.getElementById('pm-stock')?.value === '') {
-    alert('Please fill in Name, SKU, Category and Stock Units.');
+async function _saveProductModal(editSku) {
+  const name = document.getElementById('pm-name').value.trim();
+  const brand_id = Number(document.getElementById('pm-brand').value);
+  const cat = document.getElementById('pm-cat').value;
+  const desc = document.getElementById('pm-desc').value.trim();
+  const stock = parseInt(document.getElementById('pm-stock').value);
+  const stockPct = parseInt(document.getElementById('pm-stockpct').value);
+  const sku = document.getElementById('pm-sku').value.trim();
+  const icon = document.getElementById('pm-icon').value.trim() || '📦';
+
+  if (!name || !brand_id || !cat || !sku) {
+    alert("Please fill all required fields");
     return;
   }
-  if (editSku) {
-    const idx = productsData.findIndex(p => p.sku === editSku);
-    if (idx !== -1) productsData[idx] = { name, brand, cat, desc, stock, stockPct, sku: editSku, icon };
-    showPortalToast(`"${name}" updated!`);
-  } else {
-    if (productsData.some(p => p.sku === sku)) { alert(`SKU "${sku}" already exists.`); return; }
-    productsData.unshift({ name, brand, cat, desc, stock, stockPct, sku, icon });
-    showPortalToast(`"${name}" added to catalogue!`);
+
+  try {
+    const existing = editSku ? productsData.find(p => p.sku === editSku) : null;
+
+    const url = existing ? `/api/products/${existing.id}` : '/api/products';
+    const method = existing ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        brand_id,
+        cat,
+        desc,
+        stock,
+        stock_pct: stockPct,
+        sku,
+        icon
+      })
+    });
+     
+    console.log({
+        name,
+        brand_id,
+        cat,
+        sku
+      });
+    if (!res.ok) throw new Error('Failed to save');
+
+    closeProductModal();
+    await loadProductsFromDB();
+
+  } catch (err) {
+    console.error(err);
+    alert('Error saving product');
   }
-  closeProductModal();
+}
+
+    // ✅ RELOAD FROM DB (VERY IMPORTANT)
+   async function loadProductsFromDB() {
+  const res = await fetch('/api/products');
+  const json = await res.json();
+
+  const formatted = (json.data || []).map(p => ({
+    id: p.id,
+    brand_id: p.brand_id,
+    name: p.name,
+    brand: p.brand || '',
+    cat: p.cat,
+    desc: p.description || '',
+    stock: p.stock,
+    stockPct: p.stock_pct,
+    sku: p.sku,
+    icon: p.icon || '📦'
+  }));
+
+  productsData = formatted;
   renderProducts(productsData);
 }
+function initProducts() {
+  loadProductsFromDB();
+}
+
+
 function closeProductModal() {
   const overlay = document.getElementById('product-modal-overlay');
   if (!overlay) return;
@@ -727,17 +827,7 @@ document.addEventListener('click', function(e) {
 // ═══════════════════════════════════════════════════════════════
 //  ADD BRAND MODAL
 // ═══════════════════════════════════════════════════════════════
-const gradientOptions = [
-  'linear-gradient(135deg,#1A56DB,#60A5FA)',
-  'linear-gradient(135deg,#F59E0B,#D97706)',
-  'linear-gradient(135deg,#EF4444,#B91C1C)',
-  'linear-gradient(135deg,#8B5CF6,#6D28D9)',
-  'linear-gradient(135deg,#06B6D4,#0E7490)',
-  'linear-gradient(135deg,#10B981,#047857)',
-  'linear-gradient(135deg,#EC4899,#BE185D)',
-  'linear-gradient(135deg,#F97316,#C2410C)',
-];
-let selectedGradient = gradientOptions[0];
+
 
 function openAddBrand() {
   if (document.getElementById('add-brand-overlay')) {
@@ -919,7 +1009,7 @@ async function loadBrandsFromDB() {
           <td>${markets}</td>
           <td>
             <div style="display:flex;gap:5px;align-items:center">
-              <button class="btn-ghost" onclick="openBrandDetail('${safeN}')" style="padding:5px 12px;font-size:12px">${t.view_btn||'View'}</button>
+              <button class="btn-ghost" onclick="viewBrandProducts('${safeN}')" style="padding:5px 12px;font-size:12px">${t.view_btn||'View'}</button>
               <button onclick="openEditBrand(this)" title="Edit"
                 style="width:30px;height:30px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--primary);transition:all 0.15s"
                 onmouseover="this.style.background='#EEF2FF'" onmouseout="this.style.background='var(--surface2)'">${editSVG}</button>

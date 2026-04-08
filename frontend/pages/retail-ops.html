@@ -1,0 +1,203 @@
+<div class="page" id="page-retail-ops">
+  <div class="page-header-bar">
+    <div>
+      <h2 class="page-title">Retail Operations Dashboard & Analytics</h2>
+      <p class="page-sub" style="color:var(--text2);font-size:13px;margin-top:2px">Real-time operational insights integrated with Odoo — Sales, KPIs, Margins</p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="odoo-badge"><span class="odoo-dot"></span>Odoo Live</div>
+      <select class="mini-select" style="height:34px">
+        <option>This Month (Mar 2026)</option>
+        <option>Last Month (Feb 2026)</option>
+        <option>Q1 2026</option>
+        <option>Full Year 2026</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Primary KPIs -->
+  <div class="stats-grid" style="margin-bottom:20px">
+    <div class="stat-card" style="border-top:3px solid #1A56DB">
+      <div class="stat-card-icon" style="background:rgba(26,86,219,0.1)">💰</div>
+      <div class="stat-card-val">AED 4.2M</div>
+      <div class="stat-card-label">Total Sales Revenue</div>
+      <div class="stat-card-trend trend-up">↑ 8.1% vs last month</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid #10B981">
+      <div class="stat-card-icon" style="background:rgba(16,185,129,0.1)">📈</div>
+      <div class="stat-card-val">AED 780K</div>
+      <div class="stat-card-label">Gross Profit</div>
+      <div class="stat-card-trend trend-up">↑ 18.5% margin</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid #F59E0B">
+      <div class="stat-card-icon" style="background:rgba(245,158,11,0.1)">🔄</div>
+      <div class="stat-card-val">4.8x</div>
+      <div class="stat-card-label">Stock Turnover Rate</div>
+      <div class="stat-card-trend trend-up">↑ 0.3x improvement</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid #8B5CF6">
+      <div class="stat-card-icon" style="background:rgba(139,92,246,0.1)">🏆</div>
+      <div class="stat-card-val">97.8%</div>
+      <div class="stat-card-label">Order Fulfillment Rate</div>
+      <div class="stat-card-trend trend-up">↑ 0.6% this month</div>
+    </div>
+  </div>
+
+  <!-- Sales Performance Chart + Department KPIs -->
+  <div class="two-col" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Sales Performance — Monthly Trend</span>
+        <div style="display:flex;gap:8px">
+          <span class="tl-item"><span class="tl-dot" style="background:#1A56DB"></span>Revenue</span>
+          <span class="tl-item"><span class="tl-dot" style="background:#10B981"></span>Gross Profit</span>
+        </div>
+      </div>
+      <div class="bar-chart" style="gap:8px;margin-top:8px">
+        <div class="bar-wrap bar-duo"><div style="display:flex;gap:4px;align-items:flex-end;height:100%"><div class="bar" style="height:55%;background:linear-gradient(180deg,#60A5FA,#1A56DB);width:22px;border-radius:5px 5px 0 0"></div><div class="bar" style="height:30%;background:linear-gradient(180deg,#34D399,#10B981);width:12px;border-radius:5px 5px 0 0"></div></div><div class="bar-label">Oct</div></div>
+        <div class="bar-wrap bar-duo"><div style="display:flex;gap:4px;align-items:flex-end;height:100%"><div class="bar" style="height:62%;background:linear-gradient(180deg,#60A5FA,#1A56DB);width:22px;border-radius:5px 5px 0 0"></div><div class="bar" style="height:34%;background:linear-gradient(180deg,#34D399,#10B981);width:12px;border-radius:5px 5px 0 0"></div></div><div class="bar-label">Nov</div></div>
+        <div class="bar-wrap bar-duo"><div style="display:flex;gap:4px;align-items:flex-end;height:100%"><div class="bar" style="height:88%;background:linear-gradient(180deg,#60A5FA,#1A56DB);width:22px;border-radius:5px 5px 0 0"></div><div class="bar" style="height:48%;background:linear-gradient(180deg,#34D399,#10B981);width:12px;border-radius:5px 5px 0 0"></div></div><div class="bar-label">Dec</div></div>
+        <div class="bar-wrap bar-duo"><div style="display:flex;gap:4px;align-items:flex-end;height:100%"><div class="bar" style="height:58%;background:linear-gradient(180deg,#60A5FA,#1A56DB);width:22px;border-radius:5px 5px 0 0"></div><div class="bar" style="height:32%;background:linear-gradient(180deg,#34D399,#10B981);width:12px;border-radius:5px 5px 0 0"></div></div><div class="bar-label">Jan</div></div>
+        <div class="bar-wrap bar-duo"><div style="display:flex;gap:4px;align-items:flex-end;height:100%"><div class="bar" style="height:73%;background:linear-gradient(180deg,#60A5FA,#1A56DB);width:22px;border-radius:5px 5px 0 0"></div><div class="bar" style="height:40%;background:linear-gradient(180deg,#34D399,#10B981);width:12px;border-radius:5px 5px 0 0"></div></div><div class="bar-label">Feb</div></div>
+        <div class="bar-wrap bar-duo"><div style="display:flex;gap:4px;align-items:flex-end;height:100%"><div class="bar" style="height:82%;background:linear-gradient(180deg,#60A5FA,#1A56DB);width:22px;border-radius:5px 5px 0 0"></div><div class="bar" style="height:46%;background:linear-gradient(180deg,#34D399,#10B981);width:12px;border-radius:5px 5px 0 0"></div></div><div class="bar-label">Mar</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="card-title">Department-wise KPIs</span></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Department</th><th>Revenue</th><th>GP%</th><th>Stock Turn</th><th>KPI Score</th></tr></thead>
+          <tbody>
+            <tr><td><strong>FMCG</strong></td><td>AED 1.2M</td><td>16.4%</td><td>5.2x</td><td><span class="kpi-score high">88/100</span></td></tr>
+            <tr><td><strong>Pharma</strong></td><td>AED 960K</td><td>24.1%</td><td>4.8x</td><td><span class="kpi-score high">92/100</span></td></tr>
+            <tr><td><strong>Grocery</strong></td><td>AED 820K</td><td>14.8%</td><td>6.1x</td><td><span class="kpi-score med">74/100</span></td></tr>
+            <tr><td><strong>Clothing</strong></td><td>AED 640K</td><td>19.2%</td><td>2.9x</td><td><span class="kpi-score med">68/100</span></td></tr>
+            <tr><td><strong>Electronics</strong></td><td>AED 380K</td><td>12.6%</td><td>3.4x</td><td><span class="kpi-score low">61/100</span></td></tr>
+            <tr><td><strong>Personal Care</strong></td><td>AED 200K</td><td>28.3%</td><td>4.1x</td><td><span class="kpi-score high">86/100</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gross Profit Analysis + Stock Movement + Margin Monitoring -->
+  <div class="three-col" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-header"><span class="card-title">Gross Profit Analysis</span></div>
+      <div class="donut-wrap" style="flex-direction:column;gap:12px">
+        <svg class="donut-svg" viewbox="0 0 120 120">
+          <circle cx="60" cy="60" fill="none" r="48" stroke="var(--surface2)" stroke-width="18"></circle>
+          <circle cx="60" cy="60" fill="none" r="48" stroke="#1A56DB" stroke-dasharray="96 205" stroke-dashoffset="0" stroke-width="18" transform="rotate(-90 60 60)"></circle>
+          <circle cx="60" cy="60" fill="none" r="48" stroke="#10B981" stroke-dasharray="62 239" stroke-dashoffset="-96" stroke-width="18" transform="rotate(-90 60 60)"></circle>
+          <circle cx="60" cy="60" fill="none" r="48" stroke="#F59E0B" stroke-dasharray="42 259" stroke-dashoffset="-158" stroke-width="18" transform="rotate(-90 60 60)"></circle>
+          <text fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle" x="60" y="56">18.5%</text>
+          <text fill="var(--text2)" font-size="8" text-anchor="middle" x="60" y="68">Avg GP Margin</text>
+        </svg>
+        <div class="donut-legend" style="width:100%">
+          <div class="legend-item"><div class="legend-dot" style="background:#1A56DB"></div><span class="legend-label">Product GP</span><span class="legend-val">AED 580K</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#10B981"></div><span class="legend-label">Brand GP</span><span class="legend-val">AED 140K</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#F59E0B"></div><span class="legend-label">Trade Deals</span><span class="legend-val">AED 60K</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="card-title">Stock Movement</span></div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px">
+        <div class="movement-row">
+          <span class="move-label">📥 Inbound</span>
+          <div style="flex:1;margin:0 10px"><div class="progress-bar"><div class="progress-fill" style="width:78%;background:#10B981"></div></div></div>
+          <span class="move-val" style="color:#10B981">+42,300</span>
+        </div>
+        <div class="movement-row">
+          <span class="move-label">📤 Outbound</span>
+          <div style="flex:1;margin:0 10px"><div class="progress-bar"><div class="progress-fill" style="width:65%;background:#1A56DB"></div></div></div>
+          <span class="move-val" style="color:#1A56DB">-35,100</span>
+        </div>
+        <div class="movement-row">
+          <span class="move-label">↩️ Returns</span>
+          <div style="flex:1;margin:0 10px"><div class="progress-bar"><div class="progress-fill" style="width:12%;background:#EF4444"></div></div></div>
+          <span class="move-val" style="color:#EF4444">-1,240</span>
+        </div>
+        <div class="movement-row">
+          <span class="move-label">🔄 Transfers</span>
+          <div style="flex:1;margin:0 10px"><div class="progress-bar"><div class="progress-fill" style="width:28%;background:#8B5CF6"></div></div></div>
+          <span class="move-val" style="color:#8B5CF6">3,400</span>
+        </div>
+        <div style="background:var(--surface2);border-radius:10px;padding:10px;margin-top:6px">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Net Stock Position</div>
+          <div style="font-size:20px;font-weight:700;color:var(--success)">+5,960 units</div>
+          <div style="font-size:11px;color:var(--text3)">vs prior month: +8.3%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="card-title">Margin Monitoring</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="margin-alert good-alert">
+          <div class="margin-alert-label">Pharma</div>
+          <div class="margin-alert-val">24.1%</div>
+          <div class="margin-alert-bar"><div style="width:90%;height:6px;background:#10B981;border-radius:3px"></div></div>
+          <span class="status-badge active" style="font-size:10px">Target Met</span>
+        </div>
+        <div class="margin-alert good-alert">
+          <div class="margin-alert-label">Personal Care</div>
+          <div class="margin-alert-val">28.3%</div>
+          <div class="margin-alert-bar"><div style="width:95%;height:6px;background:#10B981;border-radius:3px"></div></div>
+          <span class="status-badge active" style="font-size:10px">Target Met</span>
+        </div>
+        <div class="margin-alert warn-alert">
+          <div class="margin-alert-label">Grocery</div>
+          <div class="margin-alert-val">14.8%</div>
+          <div class="margin-alert-bar"><div style="width:60%;height:6px;background:#F59E0B;border-radius:3px"></div></div>
+          <span class="status-badge review" style="font-size:10px">Below Target</span>
+        </div>
+        <div class="margin-alert danger-alert">
+          <div class="margin-alert-label">Electronics</div>
+          <div class="margin-alert-val">12.6%</div>
+          <div class="margin-alert-bar"><div style="width:40%;height:6px;background:#EF4444;border-radius:3px"></div></div>
+          <span class="status-badge danger-badge" style="font-size:10px">Critical</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Management Level Reporting Panel -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Management-Level Reporting</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn-primary-sm" onclick="generateMgmtReport()">📊 Generate Report</button>
+        <button class="btn-primary-sm" style="background:var(--surface2);color:var(--text)" onclick="scheduleReport()">🕐 Schedule</button>
+      </div>
+    </div>
+    <div class="reports-grid">
+      <div class="report-tile" onclick="openReport('executive')">
+        <div class="report-tile-icon" style="background:rgba(26,86,219,0.1);color:#1A56DB">📋</div>
+        <div class="report-tile-title">Executive Summary</div>
+        <div class="report-tile-sub">P&L, Revenue, KPIs — Board Ready</div>
+        <div class="report-tile-badge">Monthly</div>
+      </div>
+      <div class="report-tile" onclick="openReport('sales')">
+        <div class="report-tile-icon" style="background:rgba(16,185,129,0.1);color:#10B981">📈</div>
+        <div class="report-tile-title">Sales Deep Dive</div>
+        <div class="report-tile-sub">By brand, SKU, market & channel</div>
+        <div class="report-tile-badge">Weekly</div>
+      </div>
+      <div class="report-tile" onclick="openReport('margin')">
+        <div class="report-tile-icon" style="background:rgba(245,158,11,0.1);color:#D97706">💹</div>
+        <div class="report-tile-title">Margin Analysis</div>
+        <div class="report-tile-sub">Gross profit by category & supplier</div>
+        <div class="report-tile-badge">Monthly</div>
+      </div>
+      <div class="report-tile" onclick="openReport('operations')">
+        <div class="report-tile-icon" style="background:rgba(139,92,246,0.1);color:#7C3AED">⚙️</div>
+        <div class="report-tile-title">Operations KPI</div>
+        <div class="report-tile-sub">Fulfillment, returns, warehouse ops</div>
+        <div class="report-tile-badge">Daily</div>
+      </div>
+    </div>
+  </div>
+</div>
