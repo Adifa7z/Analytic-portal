@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JanBros — Claude Prompts</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#F9FAFB;color:#111827;padding:28px;max-width:1100px;margin:0 auto}
+h1{font-size:24px;font-weight:700;color:#0C3880;margin-bottom:6px}
+.doc-sub{font-size:13px;color:#6B7280;margin-bottom:24px}
+.how-to{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:16px 20px;margin-bottom:28px;font-size:13px;color:#1E3A8A;line-height:1.8}
+.phase-block{margin-bottom:36px}
+.phase-header{padding:14px 20px;border-radius:10px 10px 0 0;display:flex;align-items:center;gap:12px}
+.phase-num{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:white;flex-shrink:0;background:rgba(255,255,255,0.25)}
+.phase-title{font-size:16px;font-weight:700;color:white}
+.phase-sub{font-size:12px;color:rgba(255,255,255,0.8);margin-top:2px}
+.prompts-container{border:1px solid #E5E7EB;border-top:none;border-radius:0 0 10px 10px;overflow:hidden}
+.prompt-block{border-bottom:1px solid #E5E7EB;background:white}
+.prompt-block:last-child{border-bottom:none}
+.prompt-meta{display:flex;align-items:flex-start;justify-content:space-between;padding:14px 20px 0;gap:12px}
+.prompt-label{font-size:13px;font-weight:700;color:#111827}
+.prompt-tag{font-size:10px;padding:3px 10px;border-radius:12px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.tag-critical{background:#FEE2E2;color:#991B1B}
+.tag-high{background:#FEF3C7;color:#92400E}
+.tag-med{background:#D1FAE5;color:#065F46}
+.tag-low{background:#E0E7FF;color:#3730A3}
+.prompt-desc{font-size:12px;color:#6B7280;padding:4px 20px 8px;line-height:1.6}
+.prompt-box{margin:0 20px 16px;background:#111827;border-radius:8px;position:relative}
+.prompt-text{padding:16px 18px;font-size:11.5px;color:#E5E7EB;font-family:'Courier New',monospace;line-height:1.8;white-space:pre-wrap;word-break:break-word}
+.copy-btn{position:absolute;top:10px;right:10px;background:#374151;border:none;color:#D1D5DB;font-size:10px;padding:5px 12px;border-radius:5px;cursor:pointer;font-family:Arial,sans-serif;transition:background .15s}
+.copy-btn:hover{background:#4B5563}
+.copy-btn.copied{background:#065F46;color:white}
+.ctx-box{margin:0 20px 16px;background:#F0FFF4;border:1px solid #A7F3D0;border-radius:8px;padding:12px 16px;font-size:11px;color:#065F46;line-height:1.7}
+.ctx-box strong{font-weight:700;display:block;margin-bottom:4px}
+.warn-box{margin:0 20px 16px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;padding:12px 16px;font-size:11px;color:#92400E;line-height:1.7}
+.warn-box strong{font-weight:700;display:block;margin-bottom:4px}
+.footer{background:#0C3880;color:white;border-radius:10px;padding:20px 24px;margin-top:32px;font-size:13px;line-height:1.9}
+.footer strong{font-weight:700;font-size:15px;display:block;margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<h1>JanBros CognexiaAI — Complete Claude Prompt Library</h1>
+<div class="doc-sub">13 ready-to-use prompts for building every remaining feature and connecting live data &nbsp;|&nbsp; 5 phases &nbsp;|&nbsp; April 2026</div>
+
+<div class="how-to">
+<strong>How to use these prompts:</strong><br>
+1. Open a <strong>new Claude conversation</strong> for each prompt — do not chain all in one chat.<br>
+2. <strong>Copy the full prompt</strong> using the Copy button. Paste your actual file contents where it says [PASTE FILE HERE].<br>
+3. <strong>Test after each prompt</strong> (Sakshi) before moving to the next one. The test cases are listed below each prompt.<br>
+4. The prompts are in <strong>strict dependency order</strong> — Prompt 1 must be done before Prompt 2, and so on.<br>
+5. If Claude's response gets cut off, reply: <em>"Continue from where you stopped, show the rest of the file."</em><br>
+6. Neha: while Adifa works on Prompts 1-3, start preparing the historical data Excel files (6 months of POs, inventory counts, sales).
+</div>
+
+
+<!-- PHASE 1 -->
+<div class="phase-block">
+<div class="phase-header" style="background:#0C3880">
+  <div class="phase-num">1</div>
+  <div><div class="phase-title">Phase 1 — Security and Authentication</div><div class="phase-sub">Fix the P0 security issue first. Nothing else works safely without this.</div></div>
+</div>
+<div class="prompts-container">
+
+<div class="prompt-block">
+<div class="prompt-meta"><div class="prompt-label">Prompt 1 — Environment Setup and Real JWT Login</div><div class="prompt-tag tag-critical">CRITICAL — Do First</div></div>
+<div class="prompt-desc">Moves DB password out of source code. Replaces the fake "any email/any password" login with real bcrypt + JWT authentication.</div>
+<div class="warn-box"><strong>Before you start:</strong> Your server.js has password: 'neha*123' hardcoded. This prompt fixes that. Do not skip this step under any circumstances.</div>
+<div class="prompt-box">
+<button class="copy-btn" onclick="copyP(this)">Copy</button>
+<div class="prompt-text">You are a senior Node.js developer. I have an Express + PostgreSQL portal called JanBros CognexiaAI. I need real authentication to replace the current fake login.
+
+MY CURRENT SITUATION:
+- server.js has DB password hardcoded as plain text
+- doLogin() in app.js accepts any email and any password (demo only)
+- No users table in PostgreSQL yet
+- No .env file yet
+- Current npm packages: express, pg only
+
+MY FILE STRUCTURE:
+- backend/server.js (main Express server)
+- backend/routes/product-modules.js (4 analytics routes)
+- frontend/assets/app.js (all frontend JS)
+- frontend/components/auth-login.html (login UI)
+- frontend/components/sidebar.html (navigation)
+
+HERE IS MY CURRENT server.js:
+[PASTE YOUR FULL server.js FILE HERE]
+
+HERE IS THE doLogin FUNCTION FROM app.js (lines ~170-200):
+[PASTE THE doLogin() FUNCTION AND SURROUNDING CODE HERE]
+
+WHAT I NEED — do in this exact order:
+
+STEP 1: Show me the exact content of backend/.env file to create
+
+STEP 2: Modify server.js to:
+- Add require('dotenv').config() at the very top line
+- Replace the hardcoded Pool config with process.env variables
+- Keep ALL existing routes working exactly as before
+- Show npm install command for: dotenv bcrypt jsonwebtoken
+
+STEP 3: Create backend/routes/auth.js (complete new file) with:
+- POST /api/auth/login: query users table, bcrypt.compare(), return JWT containing {id, email, role, name}, 8 hour expiry
+- GET /api/auth/me: verify Bearer token from Authorization header, return user object
+- function requireAuth(req, res, next): checks Bearer token, attaches req.user, returns 401 if missing/invalid
+- function requireAdmin(req, res, next): checks req.user.role === 'admin', returns 403 if not
+- module.exports = { router, requireAuth, requireAdmin }
+
+STEP 4: Show the exact 4 lines to add to server.js to register the auth router
+
+STEP 5: SQL to create users table and seed 2 users:
+- admin@janbros.com with password Admin@123 (role: admin)
+- viewer@janbros.com with password Viewer@123 (role: viewer)
+- Show exact bcrypt hash values to INSERT (salt rounds 10)
+
+STEP 6: Replace doLogin() function in app.js with:
+- fetch POST /api/auth/login with {email, password}
+- On 200: store JWT in localStorage as 'janbros_token', store user as 'janbros_user' JSON
+- Call applyRoleUI(user.role)
+- On 401/error: show error message in the login form
+- Write applyRoleUI(role): shows id="admin-data-entry" sidebar section when role is admin, hides it otherwise
+- Write doLogout(): removes both localStorage keys, reloads page
+- Write startup check: on page load, if janbros_token exists in localStorage, restore session without re-login
+- Update avatar initials from real user name
+
+CRITICAL CONSTRAINTS:
+- Keep ALL existing app.js functions working (navigate, loadBrandsFromDB, openBrandDetail, etc.)
+- Keep ALL existing server.js routes working
+- Never change the UI design — only the JavaScript logic changes
+- Show complete file contents for all new/modified files
+- Add .env to .gitignore and show that instruction</div>
+</div>
+<div class="ctx-box"><strong>Sakshi — test these after Prompt 1:</strong>
+1. Server starts without errors after npm install dotenv bcrypt jsonwebtoken
+2. POST /api/auth/login with admin@janbros.com + Admin@123 returns 200 with token field
+3. POST /api/auth/login with wrong password returns 401
+4. GET /api/auth/me with valid Bearer token returns user object
+5. GET /api/auth/me with no token returns 401
+6. Login in browser as admin — Data Entry sidebar section appears
+7. Logout — login screen shows again, localStorage is empty</div>
+</div>
+
+<div class="prompt-block">
+<div class="prompt-meta"><div class="prompt-label">Prompt 2 — Add Data Entry Sidebar Section</div><div class="prompt-tag tag-critical">CRITICAL</div></div>
+<div class="prompt-desc">Adds the "Data Entry" navigation section to the sidebar that only admins can see. This is the entry point for all real data.</div>
+<div class="prompt-box">
+<button class="copy-btn" onclick="copyP(this)">Copy</button>
+<div class="prompt-text">You are a senior frontend developer. I have a portal sidebar navigation and I need to add a Data Entry section visible only to admins.
+
+HERE IS MY CURRENT frontend/components/sidebar.html:
+[PASTE YOUR FULL sidebar.html FILE HERE]
+
+WHAT I NEED:
+
+1. Add a new nav section to sidebar.html AFTER the Intelligence section (the one with Purchase Intel, Inventory Control, Retail Ops, Decision Support) and BEFORE the Insights section.
+
+The new section:
+- id="admin-data-entry"
+- style="display:none" by default (shown only after admin login via applyRoleUI)
+- nav-label text: "Data Entry"
+- 4 nav items using the EXACT SAME HTML structure as existing nav items:
+  a. "+ Add Purchase Order" — onclick="navigate('add-purchase', this)"
+  b. "+ Log Inventory Count" — onclick="navigate('log-inventory', this)"
+  c. "+ Record Sales" — onclick="navigate('record-sales', this)"
+  d. "Upload CSV / Excel" — onclick="navigate('upload-data', this)"
+- Each item needs a nav-icon SVG (stroke-based, same style as existing icons)
+- Each item needs a nav-badge with text "New" styled the same green way as the existing New badges on Intelligence items
+- Each item needs a nav-tooltip span
+
+2. In app.js, update the navigate() function:
+- Add 'add-purchase', 'log-inventory', 'record-sales', 'upload-data' to the list of valid page IDs
+- These pages will load the same way as all other pages
+
+3. Show ONLY the specific changes needed — not the whole app.js file
+
+CONSTRAINT: Match the EXACT existing sidebar style — same font size, spacing, colors, hover behavior. Do not introduce any new CSS.</div>
+</div>
+<div class="ctx-box"><strong>Sakshi — test after Prompt 2:</strong>
+1. Admin login → Data Entry section visible with 4 items, correct icons and badges
+2. Viewer login → Data Entry section completely hidden
+3. Click each Data Entry nav item → no JavaScript errors (page not found is OK for now)
+4. Visual check: new section is indistinguishable in style from the Intelligence section above it</div>
+</div>
+
+</div></div>
+
+<!-- PHASE 2 -->
+<div class="phase-block">
+<div class="phase-header" style="background:#057A55">
+  <div class="phase-num">2</div>
+  <div><div class="phase-title">Phase 2 — Database Tables and Data Entry Forms</div><div class="phase-sub">Create 3 new tables. Build 3 admin forms. Real data starts entering the system here.</div></div>
+</div>
+<div class="prompts-container">
+
+<div class="prompt-block">
+<div class="prompt-meta"><div class="prompt-label">Prompt 3 — New Database Tables and Data Entry API</div><div class="prompt-tag tag-critical">CRITICAL</div></div>
+<div class="prompt-desc">Creates purchase_orders, inventory_logs, and sales_transactions tables plus the complete Express router for all data entry endpoints.</div>
+<div class="prompt-box">
+<button class="copy-btn" onclick="copyP(this)">Copy</button>
+<div class="prompt-text">You are a senior backend developer. I need to create 3 new PostgreSQL tables and a complete data entry API for my JanBros portal.
+
+MY EXISTING DATABASE (janbros_db):
+- brands: id, name, initials, gradient, category, status, markets[], revenue, growth, link, created_at
+- products: id, brand_id FK, name, sku, cat, icon, description, stock, stock_pct, price, created_at
+- users: id, email, password_hash, full_name, role, is_active, created_at (created in Prompt 1)
+
+MY STACK: Node.js 20, Express 4, PostgreSQL 15, pg 8.x
+MIDDLEWARE: req.pool available on all routes, requireAuth and requireAdmin imported from auth.js
+
+TASK 1 — SQL (run this in pgAdmin):
+
+Create these 3 tables with all constraints and indexes:
+
+purchase_orders:
+- id SERIAL PK, product_id INT FK products(id) ON DELETE CASCADE NOT NULL
+- supplier_name VARCHAR(150) NOT NULL
+- qty_ordered INTEGER NOT NULL CHECK > 0
+- cost_price NUMERIC(10,2) NOT NULL CHECK > 0
+- lead_time_days INTEGER DEFAULT 7
+- status VARCHAR(20) DEFAULT 'Pending' CHECK IN ('Pending','Delivered','Partial','Cancelled')
+- po_date DATE NOT NULL DEFAULT CURRENT_DATE
+- delivery_date DATE nullable
+- notes TEXT, created_at TIMESTAMP DEFAULT NOW()
+- Indexes on: product_id, po_date, supplier_name
+
+inventory_logs:
+- id SERIAL PK, product_id INT FK products(id) ON DELETE CASCADE NOT NULL
+- warehouse VARCHAR(100) NOT NULL DEFAULT 'Dubai Warehouse A'
+- erp_qty INTEGER NOT NULL DEFAULT 0
+- physical_qty INTEGER NOT NULL DEFAULT 0
+- damage_qty INTEGER NOT NULL DEFAULT 0 CHECK >= 0
+- shrinkage_qty INTEGER NOT NULL DEFAULT 0 CHECK >= 0
+- count_date DATE NOT NULL DEFAULT CURRENT_DATE
+- counted_by VARCHAR(100), notes TEXT, created_at TIMESTAMP DEFAULT NOW()
+- Indexes on: product_id, count_date, warehouse
+
+sales_transactions:
+- id SERIAL PK, product_id INT FK products(id) ON DELETE CASCADE NOT NULL
+- qty_sold INTEGER NOT NULL CHECK > 0
+- sale_price NUMERIC(10,2) NOT NULL CHECK > 0
+- channel VARCHAR(50) NOT NULL DEFAULT 'In-Store' CHECK IN ('In-Store','Online','Wholesale','Export')
+- market VARCHAR(50) NOT NULL DEFAULT 'UAE' CHECK IN ('UAE','KSA','Kuwait','Bahrain','Oman','Jordan','Global')
+- sale_date DATE NOT NULL DEFAULT CURRENT_DATE
+- notes TEXT, created_at TIMESTAMP DEFAULT NOW()
+- Indexes on: product_id, sale_date, channel, market
+
+End the SQL with a SELECT showing all tables and their row counts.
+
+TASK 2 — Create backend/routes/data-entry.js (complete new file):
+
+POST /api/data-entry/purchase [requireAdmin]:
+- Validate required: product_id, supplier_name, qty_ordered, cost_price, po_date
+- INSERT INTO purchase_orders, return 201 + inserted row
+
+GET /api/data-entry/purchases [requireAuth]:
+- JOIN products (name, sku) and brands (name as brand_name)
+- ORDER BY po_date DESC, LIMIT 100
+
+PUT /api/data-entry/purchase/:id [requireAdmin]:
+- Update: status, delivery_date, notes only
+- Return updated row or 404
+
+POST /api/data-entry/inventory [requireAdmin]:
+- Validate required: product_id, erp_qty, physical_qty, count_date
+- INSERT INTO inventory_logs
+- After insert, run: UPDATE products SET stock=physical_qty, stock_pct=LEAST(100, ROUND(physical_qty::float/GREATEST(erp_qty,1)*100)) WHERE id=product_id
+- Return 201 + inserted row
+
+GET /api/data-entry/inventory-logs [requireAuth]:
+- JOIN products and brands, include computed (physical_qty - erp_qty) AS variance
+- ORDER BY count_date DESC, LIMIT 100
+
+POST /api/data-entry/sales [requireAuth + requireAdmin]:
+- Validate required: product_id, qty_sold, sale_price, sale_date
+- INSERT INTO sales_transactions, return 201 + inserted row
+
+GET /api/data-entry/sales [requireAuth]:
+- JOIN products and brands, include (qty_sold * sale_price) AS total_revenue
+- ORDER BY sale_date DESC, LIMIT 100
+
+Rules for all routes:
+- Parameterized queries only ($1, $2 etc.) — never string interpolation in SQL
+- Return {error: 'message'} with correct HTTP status on failure
+- req.pool is available directly
+
+TASK 3 — Show the exact 3 lines to add to server.js to mount this router at /api/data-entry</div>
+</div>
+<div class="ctx-box"><strong>Sakshi — test after Prompt 3:</strong>
+1. Run SQL in pgAdmin — all 3 tables created with no errors, indexes created
+2. POST /api/data-entry/purchase with valid JSON body — 201 response with inserted row
+3. POST /api/data-entry/purchase missing product_id — 400 with error message
+4. GET /api/data-entry/purchases — returns array (empty is fine)
+5. POST /api/data-entry/inventory — 201 + confirm products.stock updated in DB
+6. POST /api/data-entry/sales — 201 response
+7. Any POST with no JWT header — 401
+8. Viewer JWT on any POST — 403</div>
+</div>
+
+<div class="prompt-block">
+<div class="prompt-meta"><div class="prompt-label">Prompt 4 — Purchase Order Entry Form (Page)</div><div class="prompt-tag tag-high">High</div></div>
+<div class="prompt-desc">Builds the Purchase Order data entry form page. Admin uses this to log real purchase history that feeds the Purchase Intelligence module.</div>
+<div class="prompt-box">
+<button class="copy-btn" onclick="copyP(this)">Copy</button>
+<div class="prompt-text">You are a senior frontend developer. Build the Purchase Order data entry form page for my JanBros CognexiaAI portal.
+
+MY PORTAL STYLE RULES (match exactly — do not introduce new CSS):
+- CSS variables: var(--surface), var(--surface2), var(--text), var(--text2), var(--text3), var(--border), var(--primary), var(--radius)
+- Card: class="card" with class="card-header" and class="card-title"
+- Primary button: class="btn-primary", ghost button: class="btn-ghost"
+- Data table: class="data-table" inside class="table-wrap"
+- Input fields inherit from styles.css — use plain input/select/textarea HTML
+- This file is a div FRAGMENT (no DOCTYPE, no html, head, or body tags)
+
+HERE IS HOW MY EXISTING PAGES LOOK (for reference):
+[PASTE THE FIRST 50 LINES OF frontend/pages/purchase-intelligence.html HERE]
+
+CREATE frontend/pages/add-purchase.html — A div fragment with:
+
+SECTION 1 — Page header:
+- class="page-header" with h2 "Add Purchase Order" and p subtitle "Log purchase orders — data feeds Purchase Intelligence module"
+
+SECTION 2 — Entry form (inside a card):
+Fields in this order, laid out like the existing portal forms:
+1. Product: select element, id="po-product-select", populated by JS from /api/products
+   - Show as: "Brand Name — Product Name (SKU)"
+   - data-price attribute on each option from product.price field
+2. Supplier Name: text input, placeholder "e.g. Unilever Gulf, Al Rawabi Dairy"
+3. Two-column row: Qty Ordered (number, min 1) | Cost Price AED (number, step 0.01, min 0.01)
+4. Two-column row: Lead Time Days (number, default 7) | Status (select: Pending / Delivered / Partial / Cancelled)
+5. Two-column row: PO Date (date, default today) | Delivery Date (date, optional — label says "Delivery Date (optional)")
+6. Notes: textarea, 3 rows, optional
+7. Live preview box (auto-updates as user types): shows "Total Order Value: AED X,XXX.XX" in large text
+8. Two buttons: "Save Purchase Order" (btn-primary, id="po-submit-btn") and "Clear Form" (btn-ghost)
+
+FORM JAVASCRIPT (write as function initAddPurchasePage() called on navigation):
+- On load: fetch GET /api/products with JWT → populate product dropdown
+- When product selected: read data-price, show as "Reference price: AED X.XX" below the dropdown
+- As user changes qty_ordered or cost_price: update Total Order Value preview
+- On submit click:
+  - Validate required fields, show inline error message if missing
+  - Show loading spinner on button
+  - POST /api/data-entry/purchase with all field values + JWT Bearer token
+  - On 201: show green success toast "Purchase order saved", clear form fields, call loadRecentOrders()
+  - On error: show red error with API error message, restore button
+
+SECTION 3 — Recent Orders (below form in a card):
+- Card title: "Recent Purchase Orders" + small "Refresh" button calling loadRecentOrders()
+- function loadRecentOrders(): fetch GET /api/data-entry/purchases with JWT
+- Table columns: PO Date | Product (SKU) | Supplier | Qty | Cost/Unit | Total Value | Status
+- Status: color-coded span badges (green=Delivered, amber=Pending, blue=Partial, red=Cancelled)
+- If no rows: show "No purchase orders logged yet. Add your first order above."
+
+Show the complete file contents.</div>
+</div>
+<div class="ctx-box"><strong>Sakshi — test after Prompt 4:</strong>
+1. Navigate to "Add Purchase Order" in sidebar — form loads, product dropdown populates with all products
+2. Select a product — reference price appears below dropdown
+3. Type qty and cost_price — total value preview updates in real time
+4. Submit valid form — success toast, form clears, recent orders table shows new row
+5. Submit with empty product field — validation error shown, form not submitted
+6. Check DB: SELECT * FROM purchase_orders — row should appear
+7. Recent orders table correctly shows status badge colors</div>
+</div>
+
+<div class="prompt-block">
+<div class="prompt-meta"><div class="prompt-label">Prompt 5 — Inventory Count and Sales Entry Forms</div><div class="prompt-tag tag-high">High</div></div>
+<div class="prompt-desc">Builds the inventory count form and the sales transaction form. Two complete pages in one prompt.</div>
+<div class="prompt-box">
+<button class="copy-btn" onclick="copyP(this)">Copy</button>
+<div class="prompt-text">You are a senior frontend developer. Build TWO data entry form pages for my JanBros portal. Same style constraints as Prompt 4 — match the existing portal CSS variables exactly, div fragments only, no DOCTYPE.
+
+All API calls include: Authorization: Bearer ${localStorage.getItem('janbros_token')}
+
+==================================================
+FILE 1: frontend/pages/log-inventory.html
+==================================================
+
+Page header: "Log Inventory Count" | subtitle "Record physical vs ERP counts — feeds Inventory Control module"
+
+FORM FIELDS:
+1. Product (select — same fetch as Prompt 4)
+2. Warehouse (select options): Dubai Warehouse A / Abu Dhabi Store / KSA Distribution / Online Reserve / Other
+3. Count Date (date, default today)
+4. ERP Qty (number, label: "ERP / System Quantity — what the software shows")
+5. Physical Qty (number, label: "Actual Physical Count — what you counted in the warehouse")
+6. LIVE VARIANCE BOX (updates as user types both qty fields):
+   - Variance = Physical Qty minus ERP Qty
+   - If negative: red box "Deficit: -X units (system shows X, counted X)"
+   - If positive: green box "Surplus: +X units"
+   - If zero: gray box "Perfect match — no variance"
+   - Also show Variance %: round to 1 decimal place
+7. Damage Qty (number, default 0, label: "Damaged / Unsellable Units")
+8. Shrinkage Qty (number, default 0, label: "Missing Units (theft, expiry, admin error)")
+9. Counted By (text — name of staff member who did the count)
+10. Notes (textarea, 2 rows)
+11. Submit | Clear buttons
+
+ON SUBMIT: POST /api/data-entry/inventory
+ON SUCCESS: toast "Inventory count logged. Stock updated to [physical_qty] units for [product name]."
+
+RECENT COUNTS TABLE (below form):
+GET /api/data-entry/inventory-logs
+Columns: Date | Product | Warehouse | ERP Qty | Physical | Variance | Damage | Shrinkage | Counted By
+Color the Variance cell: red if negative, green if positive, gray if zero
+
+Init function name: initLogInventoryPage()
+
+==================================================
+FILE 2: frontend/pages/record-sales.html
+==================================================
+
+Page header: "Record Sales" | subtitle "Log sales transactions — feeds Retail Operations and Dashboard KPIs"
+
+FORM FIELDS:
+1. Product (select — same fetch)
+2. Two-column row: Qty Sold (number, min 1) | Sale Price AED (number, step 0.01 — auto-fill from product's price when selected)
+3. Two-column row: Channel (select: In-Store / Online / Wholesale / Export) | Market (select: UAE / KSA / Kuwait / Bahrain / Oman / Jordan / Global)
+4. Sale Date (date, default today)
+5. Notes (textarea, 2 rows, optional)
+6. LIVE PREVIEW ROW (auto-updates):
+   - "Total Revenue: AED X,XXX.XX"
+   - If we have cost data from the product: "Gross Profit: AED X,XXX (X.X% margin)"
+   - If no cost data: just show revenue, skip margin
+
+ON SUBMIT: POST /api/data-entry/sales
+ON SUCCESS: toast "Sale recorded — Revenue: AED X,XXX.XX"
+
+RECENT SALES TABLE (below form):
+GET /api/data-entry/sales
+Columns: Date | Product | Qty | Sale Price | Total Revenue | Channel | Market
+Add a SUMMARY ROW above the table (computed from fetched data, no extra API call):
+"Showing [N] entries | Total Revenue: AED X,XXX | Avg per transaction: AED X,XXX"
+
+Init function name: initRecordSalesPage()
+
+Show both complete files.</div>
+</div>
+<div class="ctx-box"><strong>Sakshi — test after Prompt 5:</strong>
+1. Log Inventory: type ERP=2340, Physical=2310 — variance shows -30 units in red, -1.3%
+2. Log Inventory: type ERP=2000, Physical=2000 — shows "Perfect match" in gray
+3. Record Sales: select product — sale price pre-fills, revenue preview updates as qty changes
+4. Submit both forms — success toasts, tables refresh with new rows
+5. Check DB: SELECT * FROM inventory_logs and SELECT * FROM sales_transactions — rows appear
+6. After inventory submit: SELECT stock FROM products WHERE id=X — value should equal physical_qty</div>
+</div>
+
+</div></div>
+
+<!-- PHASE 3 -->
+<div class="phase-block">
+<div class="phase-header" style="background:#1A56DB">
+  <div class="phase-num">3</div>
+  <div><div class="phase-title">Phase 3 — Replace Fake Data with Live Database Queries</div><div class="phase-sub">The most important phase. Every chart and KPI card becomes real.</div></div>
+</div>
+<div class="prompts-container">
+
+<div class="prompt-block">
+<div class="prompt-meta"><div class="prompt-label">Prompt 6 — Replace product-modules.js Fake SQL with Real Queries</div><div class="prompt-tag tag-critical">CRITICAL — Makes All Charts Real</div></div>
+<div class="prompt-desc">Replaces deriveMetrics() and trendArray() with real PostgreSQL. This single file change makes all 4 per-product module overlays show real data.</div>
+<div class="prompt-box">
+<button class="copy-btn" onclick="copyP(this)">Copy</button>
+<div class="prompt-text">You are a senior backend developer specializing in PostgreSQL. I need to replace all fake/simulated analytics data with real SQL queries.
+
+CRITICAL CONTEXT:
+My portal has 4 analytics overlays that open when a user clicks a product and selects a module. Currently ALL data is generated by two fake helper functions that I need to completely remove:
+1. deriveMetrics(p): calculates metrics using math formulas on price/stock fields
+2. trendArray(seed, months, base, variance): generates fake chart bars using product ID as a math seed
+
+These functions must be deleted entirely and replaced with real database queries against:
+- purchase_orders (product_id, supplier_name, qty_ordered, cost_price, lead_time_days, status, po_date)
+- inventory_logs (product_id, warehouse, erp_qty, physical_qty, damage_qty, shrinkage_qty, count_date)
+- sales_transactions (product_id, qty_sold, sale_price, channel, market, sale_date)
+
+HERE IS MY COMPLETE CURRENT backend/routes/product-modules.js:
+[PASTE YOUR FULL product-modules.js FILE HERE]
+
+THE JSON RESPONSE SHAPE MUST NOT CHANGE — the frontend module JS files expect specific field names. Do not rename any fields in the response JSON.
+
+REPLACE EACH ROUTE AS FOLLOWS:
+
+ROUTE 1: GET /api/products/:id/purchase
+Real SQL replacements:
+- trends.labels: exactly last 6 months in order — use generate_series(DATE_TRUNC('month', NOW() - INTERVAL '5 months'), DATE_TRUNC('month', NOW()), '1 month') — fill months with no PO data as 0 using LEFT JOIN
+- trends.purchase: SUM(qty_ordered * cost_price) per month from purchase_orders WHERE product_id=$1
+- trends.sales: SUM(qty_sold * sale_price) per month from sales_transactions WHERE product_id=$1
+- kpis.total_purchase_value: SUM(qty_ordered * cost_price) last 6 months, format as "AED X,XXX"
+- kpis.supplier_performance: from purchase_orders, compute (COUNT WHERE status='Delivered' / COUNT(*)) * 100 per supplier — return best scorer as "XX%"
+- kpis.avg_lead_time: AVG(lead_time_days) from purchase_orders WHERE product_id=$1, format as "X days"
+- kpis.gross_margin: (product.price - latest cost_price from purchase_orders) / product.price * 100, format as "X.X%"
+  - product.price is stored as VARCHAR "AED 8.50" — extract numeric: REPLACE(p.price,'AED ','')::NUMERIC
+- suppliers array: SELECT DISTINCT supplier_name, COUNT(*) as orders, AVG(lead_time_days) from purchase_orders GROUP BY supplier_name, compute score as delivered/total*100
+- reorder.coverage_days: products.stock / GREATEST((SELECT SUM(qty_sold)/30 FROM sales_transactions WHERE product_id=$1 AND sale_date >= NOW()-INTERVAL'30 days'), 1)
+- reorder.urgency: if coverage_days < 10 'urgent', < 20 'warning', else 'ok'
+- recommendations: build from real coverage_days and real margin values
+
+ROUTE 2: GET /api/products/:id/inventory
+- kpis.current_stock: latest physical_qty from inventory_logs ORDER BY count_date DESC LIMIT 1, fallback to products.stock
+- kpis.erp_stock: latest erp_qty from same row
+- kpis.variance: physical_qty - erp_qty
+- kpis.damage_loss: SUM(damage_qty) from inventory_logs WHERE product_id=$1
+- kpis.shrinkage: SUM(shrinkage_qty)
+- kpis.last_count_date: MAX(count_date)
+- movements.labels: last 6 months with generate_series
+- movements.stock: AVG(physical_qty) per month from inventory_logs
+- movements.consumed: SUM(damage_qty + shrinkage_qty) per month
+- locations: DISTINCT ON (warehouse) — latest physical_qty per warehouse
+- alerts: build from real stock_pct and real variance values
+
+ROUTE 3: GET /api/products/:id/retail
+- trends.labels: last 6 months
+- trends.units: SUM(qty_sold) per month from sales_transactions
+- trends.revenue: SUM(qty_sold * sale_price) per month
+- kpis.total_revenue: SUM(qty_sold * sale_price) all time, format "AED X,XXX"
+- kpis.units_sold: SUM(qty_sold) all time
+- kpis.avg_daily_sales: total_units / GREATEST(EXTRACT(DAY FROM NOW() - MIN(sale_date)), 1) || ' units/day'
+- channels: GROUP BY channel, SUM revenue, compute pct as fraction of total
+- top_markets: GROUP BY market, SUM revenue ORDER BY revenue DESC
+
+ROUTE 4: GET /api/products/:id/decision
+- Pull data from all 3 tables and products table
+- alerts: build array from real conditions:
+  [{type:'low_stock', severity:'critical', msg:...}] if stock_pct < 30
+  [{type:'price_spike', ...}] if latest cost > previous cost * 1.05 (use LAG window function)
+  [{type:'margin_erosion', ...}] if real margin < 0.15
+  [{type:'overdue_po', ...}] if PO status=Pending and po_date + lead_time_days < NOW()
+- health_score: 0-100 computed from real margin, real stock_pct, alert count
+- kpis.gross_margin: real value
+- forecast: use AVG monthly revenue from sales_transactions as base, +15% optimistic, -15% pessimistic
+
+GLOBAL RULES FOR ALL ROUTES:
+1. Use Promise.all() to run independent queries in parallel
+2. If a table has NO rows for this product_id: return graceful defaults (0, empty arrays, 'No data') — never crash
+3. Use generate_series with LEFT JOIN to ensure always exactly 6 month labels even for sparse data
+4. Parameterized queries only ($1, $2 etc.)
+5. DELETE deriveMetrics and trendArray functions entirely — they must not exist in the final file
+6. Keep requireAuth on all routes
+
+Show the complete replacement file.</div>
+</div>
+<div class="ctx-box"><strong>Sakshi — test after Prompt 6:</strong>
+First: use the forms from Prompts 4+5 to enter at least 3 purchase orders, 2 inventory counts, 3 sales for ONE product (e.g. product id 1).
+1. Open that product → Modules → Purchase Intelligence → trend chart shows real bars from your entries
+2. Modules → Inventory Control → shows real ERP vs physical numbers
+3. Modules → Retail Operations → shows real channel and market breakdown
+4. Modules → Decision Support → shows real alert conditions
+5. Open a product with NO entries in any table → all 4 modules show graceful "No data" state, no crashes
+6. Check Chrome DevTools Network tab — all 4 module API calls return 200 with real JSON</div>
+</div>
+
+<div class="prompt-block">
+<div class="prompt-meta"><div class="prompt-label">Prompt 7 — Live Dashboard KPI Cards</div><div class="prompt-tag tag-high">High</div></div>
+<div class="prompt-desc">Replaces the hardcoded dashboard numbers ("8,247", "AED 4.2M", "342", "23") with live DB queries. Every KPI card shows real current data.</div>
+<div class="prompt-box">
+<button class="copy-btn" onclick="copyP(this)">Copy</button>
+<div class="prompt-text">You are a senior full-stack developer. I need to make my dashboard show live data instead of hardcoded numbers.
+
+MY CURRENT SITUATION:
+- dashboard.html has 4 stat-cards with hardcoded values typed into the HTML
+- These numbers never update — they are static text
+- I now have real data in: brands, products, purchase_orders, inventory_logs, sales_transactions tables
+
+HERE IS MY CURRENT frontend/pages/dashboard.html:
+[PASTE YOUR FULL dashboard.html FILE HERE]
+
+HERE IS THE navigate() FUNCTION FROM app.js AND ANY initDashboard/loadDashboard FUNCTION:
+[PASTE THESE FUNCTIONS FROM app.js]
+
+TASK 1 — Add GET /api/dashboard/kpis to server.js:
+Run these 5 queries in parallel with Promise.all():
+- total_products: COUNT(*) FROM products
+- active_brands: COUNT(*) FROM brands WHERE status='Active'
+- monthly_revenue: SUM(qty_sold * sale_price) FROM sales_transactions WHERE sale_date >= DATE_TRUNC('month', NOW())
+- monthly_revenue_prev: same but DATE_TRUNC('month', NOW()-INTERVAL'1 month') to DATE_TRUNC('month', NOW())
+- low_stock_count: COUNT(*) FROM products WHERE stock_pct < 30
+- total_stock: SUM(stock) FROM products
+
+Return JSON: {total_products, active_brands, monthly_revenue (number), monthly_revenue_prev (number), low_stock_count, total_stock, revenue_trend: 'up'/'down'/'flat'}
+Endpoint needs requireAuth only (all roles can see dashboard).
+Show the exact lines to add to server.js.
+
+TASK 2 — Update dashboard.html and/or app.js:
+When navigate('dashboard') fires:
+1. Immediately show loading skeleton in each stat-card-val (simple animated dots or gray placeholder)
+2. Fetch GET /api/dashboard/kpis with JWT Bearer token
+3. Update each stat-card-val innerHTML:
+   - Total Products: format with toLocaleString() e.g. "8,247"
+   - Monthly Revenue: format as AED X.XM if over 1M, AED XXX.XK if over 1K
+   - Low Stock: just the number
+   - stat-card-trend: compute % change vs previous month, show "↑ X.X% vs last month" or "↓ X.X%"
+4. Also update hero-stats (the 3 numbers in the hero banner) with real counts where possible
+5. If API fails: silently fall back to keeping previous values visible
+
+Keep the exact same design — change only the data, not the layout or styling.
+Show what changes to make in dashboard.html and/or app.js.</div>
+</div>
+<div class="ctx-box"><strong>Sakshi — test after Prompt 7:</strong>
+1. Navigate to Dashboard — brief loading state, then real numbers appear
+2. GET /api/dashboard/kpis in Postman — returns correct counts from DB
+3. Add a new product via Brands page — go back to Dashboard — product count increments
+4. Enter a sale via Record Sales form — revenue should increase on Dashboard
+5. Set a product stock_pct to 15 — low stock count should increment
+6. Open DevTools → Network tab → confirm /api/dashboard/kpis call returns 200</div>
+</div>
+
+<div class="prompt-block">
+<div class="prompt-meta"><div class="prompt-label">Prompt 8 — Analytics API for All 4 Sidebar Intelligence Pages</div><div class="prompt-tag tag-high">High</div></div>
+<div class="prompt-desc">Creates backend/routes/analytics.js powering all 4 sidebar pages with real aggregated SQL across all brands combined.</div>
+<div class="prompt-box">
+<button class="copy-btn" onclick="copyP(this)">Copy</button>
+<div class="prompt-text">You are a senior PostgreSQL and Node.js developer. Build the analytics API router that powers my 4 sidebar intelligence pages with real data.
+
+CONTEXT: My 4 sidebar pages show aggregated data across ALL brands and ALL products. Currently hardcoded HTML. Need real SQL.
+
+MY 3 DATA TABLES: purchase_orders, inventory_logs, sales_transactions (all joined via product_id → products.id → brands.id)
+
+CREATE backend/routes/analytics.js with these 4 endpoints. All need requireAuth middleware:
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+GET /api/analytics/purchase-summary
+━━━━━━━━━━━━━━━━━━━━━━━━
+Run 3 queries in parallel:
+Query A — kpis:
+  total_purchase_value: SUM(qty_ordered*cost_price) last 6 months formatted as "AED X.XM"
+  supplier_count: COUNT(DISTINCT supplier_name)
+  avg_lead_time: AVG(lead_time_days) formatted as "X days"
+  fast_moving_skus: COUNT DISTINCT product_ids with any sale in last 30 days
+
+Query B — monthly_trend (use generate_series for last 6 months, fill gaps with 0):
+  labels: last 6 month names ["Oct","Nov","Dec","Jan","Feb","Mar"]
+  purchase: [SUM(qty_ordered*cost_price) per month from purchase_orders]
+  sales: [SUM(qty_sold*sale_price) per month from sales_transactions]
+
+Query C — suppliers (top 5 by total order value):
+  name, order_count, total_value (formatted AED), on_time_pct (delivered/total*100 rounded)
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+GET /api/analytics/inventory-summary
+━━━━━━━━━━━━━━━━━━━━━━━━
+Run 3 queries in parallel:
+Query A — kpis using latest log per product (DISTINCT ON (product_id) ORDER BY count_date DESC):
+  total_variance: SUM(physical_qty - erp_qty)
+  damage_loss_units: SUM(damage_qty) all time
+  accuracy_rate: AVG(physical_qty::float/GREATEST(erp_qty,1)*100) formatted "X.X%"
+  aging_items: COUNT products whose MAX(count_date) < NOW()-90 days
+
+Query B — warehouses (latest per product per warehouse):
+  warehouse name, physical_total, erp_total, product_count
+
+Query C — monthly_movement (generate_series last 6 months):
+  labels, avg_physical (AVG per month), total_loss (SUM damage+shrinkage per month)
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+GET /api/analytics/retail-summary
+━━━━━━━━━━━━━━━━━━━━━━━━
+Run 3 queries in parallel:
+Query A — kpis:
+  total_revenue: SUM(qty_sold*sale_price) last 6 months formatted "AED X.XM"
+  total_units: SUM(qty_sold)
+  avg_transaction: AVG(qty_sold*sale_price) formatted "AED X,XXX"
+  products_sold: COUNT(DISTINCT product_id) with any sale
+
+Query B — monthly_trend (generate_series):
+  labels, units (SUM qty_sold), revenue (SUM qty_sold*sale_price)
+
+Query C — channels and markets:
+  channels: [{channel, revenue, units, pct (fraction of total revenue as integer 0-100)}]
+  markets: [{market, revenue, pct}]
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+GET /api/analytics/decision-alerts
+━━━━━━━━━━━━━━━━━━━━━━━━
+Run 5 queries in parallel, collect into single alerts array:
+1. Low stock: SELECT p.name, p.sku, b.name as brand, p.stock_pct FROM products p JOIN brands b ON b.id=p.brand_id WHERE p.stock_pct < 30 — severity: stock_pct<15='critical' else 'warning'
+2. Price spike: use LAG(cost_price) OVER (PARTITION BY product_id ORDER BY po_date) to find latest > previous * 1.05 — JOIN products and brands
+3. Overdue POs: WHERE status='Pending' AND (po_date + lead_time_days) < CURRENT_DATE — JOIN products
+4. Slow movers: products with MAX(sale_date) < NOW()-60 days OR no sales at all — LEFT JOIN
+5. Margin erosion: (REPLACE(p.price,'AED ','')::NUMERIC - AVG(po.cost_price)) / REPLACE(p.price,'AED ','')::NUMERIC < 0.15 JOIN latest PO
+
+Each alert object: {type, severity, product_name, sku, brand_name, message, action}
+Return: {total_alerts: N, critical: N, warning: N, alerts: [...sorted by severity critical first]}
+
+GLOBAL RULES:
+- All monetary values return as formatted strings
+- Handle empty tables: return zeros and empty arrays not errors
+- Use Promise.all for parallel queries in each endpoint
+- Show exact lines to add to server.js to mount at /api/analytics</div>
+</div>
+<div class="ctx-box"><strong>Sakshi — test after Prompt 8:</strong>
+1. GET each of 4 endpoints in Postman with valid JWT — all return 200 with correct JSON shape
+2. monthly_trend arrays always have exactly 6 elements even with sparse data
+3. Set stock_pct=15 on a product — appears in decision-alerts response as critical
+4. Enter PO with status=Pending and po_date 30 days ago — appears in overdue alerts
+5. All 4 endpoints return valid JSON when tables are completely empty (no crashes)</div>
+</div>
+
+</div></div>
+
+<!-- PHASE 4 -->
+<div class="phase-block">
+<div class="phase-header" style="background:#5521B5">
+  <div class="phase-num">4</div>
+  <div><div class="phase-title">Phase 4 — Wire Sidebar Pages and Add Full Role Access</div><div class="phase-sub">Connect sidebar intelligence pages to real API. Add complete role-based access control.</div></div>
+</div>
+<div class="prompts-container">
+
+<div class="prompt-block">
+<div class="prompt-meta"><div class="prompt-label">Prompt 9 — Connect 4 Sidebar Intelligence Pages to Live API</div><div class="prompt-tag tag-high">High</div></div>
+<div class="prompt-desc">Wires the 4 existing sidebar pages to fetch from the real analytics API instead of showing static HTML numbers. Keeps the exact same visual design.</div>
+<div class="prompt-box">
+<button class="copy-btn" onclick="copyP(this)">Copy</button>
+<div class="prompt-text">You are a senior frontend developer. Connect my 4 sidebar intelligence pages to real API endpoints. These pages currently have hardcoded HTML numbers. Replace the static values with real fetched data while keeping the EXACT same design.
+
+MY REAL API ENDPOINTS (built in analytics.js):
+- GET /api/analytics/purchase-summary → {kpis, monthly_trend{labels,purchase,sales}, suppliers}
+- GET /api/analytics/inventory-summary → {kpis, warehouses, monthly_movement{labels,avg_physical,total_loss}}
+- GET /api/analytics/retail-summary → {kpis, monthly_trend{labels,units,revenue}, channels, markets}
+- GET /api/analytics/decision-alerts → {total_alerts, critical, warning, alerts[]}
+
+HERE ARE MY 4 CURRENT PAGE FILES (paste each):
+[PASTE frontend/pages/purchase-intelligence.html]
+[PASTE frontend/pages/inventory-control.html]
+[PASTE frontend/pages/retail-ops.html]
+[PASTE frontend/pages/decision-support.html]
+
+FOR EACH PAGE BUILD A JAVASCRIPT INIT FUNCTION:
+
+initPurchasePage(): called when navigate('purchase-intelligence') fires
+- Show loading state in each stat-card-val
+- Fetch /api/analytics/purchase-summary with JWT
+- Update all 4 stat-card-val elements with real kpis values
+- Update stat-card-trend elements with real trend direction
+- Update the purchase vs sales chart with real monthly_trend data (use Chart.js if available or replace the static bar-chart divs with real proportions)
+- Update the supplier performance rows with real supplier names, scores, and tags
+
+initInventoryPage(): called on navigate('inventory-control')
+- Fetch /api/analytics/inventory-summary
+- Update all 4 KPI cards
+- Update the ERP vs Physical stock table with real warehouse data
+- Update the 6-month chart with real movement data
+
+initRetailPage(): called on navigate('retail-ops')
+- Fetch /api/analytics/retail-summary
+- Update all 4 KPI cards
+- Update monthly trend chart with real units and revenue
+- Update channel breakdown bars with real percentages
+- Update department KPIs section
+
+initDecisionPage(): called on navigate('decision-support')
+- Fetch /api/analytics/decision-alerts
+- Replace the hardcoded "3 Critical Alerts" banner text with real total_alerts count
+- Replace static alert cards with real alert cards built from alerts array
+- Map severity: critical → class="alert-card critical", warning → class="alert-card warning"
+- Map type to appropriate icon emoji
+- Keep the "Sync Odoo" and "Run AI Analysis" buttons (non-functional is fine)
+
+GLOBAL RULES:
+- Do NOT change any CSS classes, layout, colors, or design
+- Only data values, chart data arrays, and alert card contents change
+- If API fails: console.error and show subtle "Could not load data" text, keep page visible
+- All fetch calls include Authorization: Bearer ${localStorage.getItem('janbros_token')}
+- Write only the JS init functions — do not modify the HTML structure
+
+Show the 4 init functions and where to register them in app.js or each page file.</div>
+</div>
+</div>
+
+<div class="prompt-block">
+<div class="prompt-meta"><div class="prompt-label">Prompt 10 — Full Role-Based Access Control</div><div class="prompt-tag tag-med">Medium</div></div>
+<div class="prompt-desc">Implements complete role-based UI and API access. Admin, Brand Manager, Field Staff, and Viewer each see only what they are allowed to.</div>
+<div class="prompt-box">
+<button class="copy-btn" onclick="copyP(this)">Copy</button>
+<div class="prompt-text">You are a senior full-stack developer. Implement complete role-based access control for my JanBros portal with 4 roles.
+
+MY CURRENT AUTH: JWT contains {id, email, role, name}. requireAuth and requireAdmin already exist. applyRoleUI(role) exists but only shows/hides the admin-data-entry section.
+
+ROLE ACCESS RULES:
+- admin: unrestricted access to everything
+- manager: sees all dashboards, can enter data only for their assigned brand, cannot manage users
+- staff: can only use the inventory count form and see basic dashboard, no analytics access
+- viewer: read-only — sees all dashboards and reports, no data entry, no edit/delete buttons
+
+TASK 1 — Add requireRole to auth.js:
+- function requireRole(...allowedRoles): middleware factory that checks req.user.role is in allowedRoles array
+- Update data-entry.js route declarations:
+  - POST /purchase and POST /sales: requireRole('admin','manager')
+  - POST /inventory: requireRole('admin','manager','staff')
+  - All GET routes: requireRole('admin','manager','viewer') — staff cannot view analytics data
+
+TASK 2 — Add brand scoping for manager role:
+- SQL: ALTER TABLE users ADD COLUMN IF NOT EXISTS assigned_brand_id INTEGER REFERENCES brands(id);
+- In analytics.js routes: if req.user.role === 'manager', add WHERE p.brand_id = req.user.assigned_brand_id to all product-level queries
+- In data-entry.js POST routes: if role is manager, verify submitted product_id belongs to their brand before INSERT
+
+TASK 3 — Expand applyRoleUI(role) in app.js to handle all 4 roles:
+
+For 'admin': show everything, hide nothing
+
+For 'manager':
+- Show #admin-data-entry section but hide: Upload CSV item, any user management nav item
+- Hide: delete buttons (elements with title="Delete" or class containing "btn-delete")
+- Their API requests automatically scoped to assigned brand by backend
+
+For 'staff':
+- In #admin-data-entry: show ONLY the "Log Inventory Count" item, hide the other 3
+- In sidebar Intelligence section: hide Purchase Intel, Retail Ops, Decision Support items — show only Inventory Control
+- Hide all edit/delete buttons across the portal
+
+For 'viewer':
+- Hide #admin-data-entry entirely
+- Hide all edit/delete/add buttons (btn-primary buttons in action areas)
+- Show all dashboard and intelligence pages (read-only)
+
+TASK 4 — Update the topbar avatar:
+- Replace hardcoded "AD" initials with first 2 letters of real user name from JWT
+- Show a small role badge next to or below the avatar: "Admin" purple, "Manager" blue, "Staff" amber, "Viewer" green
+- Make Sign Out in the avatar dropdown call doLogout()
+
+Show: modified auth.js, SQL for the column, specific lines to update in data-entry.js, complete updated applyRoleUI function, topbar changes in topbar.html or app.js.</div>
+</div>
+</div>
+
+<div class="prompt-block">
+<div class="prompt-meta"><div class="prompt-label">Prompt 11 — User Management Page and CSV Bulk Upload</div><div class="prompt-tag tag-med">Medium</div></div>
+<div class="prompt-desc">Adds the admin user management page for inviting team members and the CSV/Excel bulk upload for importing historical data quickly.</div>
+<div class="prompt-box">
+<button class="copy-btn" onclick="copyP(this)">Copy</button>
+<div class="prompt-text">You are a senior full-stack developer. Build two features: user management admin page and CSV/Excel bulk data upload.
+
+STACK: Node.js + Express + PostgreSQL + Vanilla JS
+USERS TABLE: id, email, password_hash, full_name, role, is_active, assigned_brand_id, created_at
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+FEATURE 1: User Management (Admin Only)
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+BACKEND — Add to a new file backend/routes/users.js (or server.js if small):
+- GET /api/users [requireAdmin]: return all users — id, email, full_name, role, is_active, assigned_brand_id — NO password_hash
+- POST /api/users [requireAdmin]: create user {email, full_name, role, assigned_brand_id, password} — bcrypt hash before storing
+- PUT /api/users/:id [requireAdmin]: update role, full_name, is_active, assigned_brand_id — not password
+- PUT /api/users/:id/reset-password [requireAdmin]: set new password (bcrypt hashed)
+- DELETE /api/users/:id [requireAdmin]: set is_active=false (soft delete, never hard delete)
+
+FRONTEND — frontend/pages/user-management.html (div fragment):
+- Page header: "User Management" | "Manage portal access for your team"
+- "Invite User" button opens an inline form (not a popup — just a card that appears/disappears)
+- Invite form fields: Full Name, Email, Role (select: admin/manager/staff/viewer), Assigned Brand (select — populate from /api/brands, only show when role=manager), Temporary Password
+- On invite submit: POST /api/users → toast "User [name] added as [role]"
+- Users table columns: Name | Email | Role (color badge) | Assigned Brand | Status | Actions
+- Role badge colors: admin=purple, manager=blue, staff=amber, viewer=green
+- Actions: Edit Role (inline dropdown to change role), Reset Password (inline text input for new password), Deactivate/Activate toggle button
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+FEATURE 2: CSV and Excel Bulk Upload
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+BACKEND:
+- npm install multer xlsx
+- POST /api/data-entry/upload-csv [requireAdmin]: multipart form with 'file' and 'type' (purchase|inventory|sales) fields
+- Parse with xlsx (handles both .csv and .xlsx)
+- Column names expected in CSV for each type:
+  Purchase: product_sku, supplier_name, qty_ordered, cost_price, lead_time_days, status, po_date, notes
+  Inventory: product_sku, warehouse, erp_qty, physical_qty, damage_qty, shrinkage_qty, count_date, counted_by, notes
+  Sales: product_sku, qty_sold, sale_price, channel, market, sale_date, notes
+- For each row: SELECT id FROM products WHERE sku = row.product_sku to get product_id
+- Bulk INSERT all valid rows in one query using VALUES ($1,$2),($3,$4) pattern
+- Return {inserted: N, skipped: M, errors: [{row: N, reason: 'SKU not found: XYZ'}]}
+
+FRONTEND — frontend/pages/upload-data.html (div fragment):
+- Step 1: 3 large clickable cards to select type (Purchase Orders / Inventory Counts / Sales)
+- Step 2: "Download Template" button — generates a CSV with correct column headers for selected type and triggers browser download
+- Step 3: File input area (accept .xlsx,.csv) — drag and drop zone
+- Step 4: "Upload and Import" button
+- Show progress: "Uploading..." → "Parsing..." → results
+- Results: "Imported X rows successfully. Skipped Y rows." with expandable error list showing which rows failed and why
+- Preview: show first 5 rows of parsed file before upload button so user can verify columns look correct
+
+Show both complete frontend files and all backend code.</div>
+</div>
+</div>
+
+</div></div>
+
+<!-- PHASE 5 -->
+<div class="phase-block">
+<div class="phase-header" style="background:#B45309">
+  <div class="phase-num">5</div>
+  <div><div class="phase-title">Phase 5 — Reports, Live Network Page, Production Deployment</div><div class="phase-sub">Auto-generate reports, make network page live, deploy to production hosting.</div></div>
+</div>
+<div class="prompts-container">
+
+<div class="prompt-block">
+<div class="prompt-meta"><div class="prompt-label">Prompt 12 — Auto-Generate Reports and Live Network Page</div><div class="prompt-tag tag-med">Medium</div></div>
+<div class="prompt-desc">Makes the Reports page generate real Excel files from DB data. Makes the Network page show live warehouse stock levels instead of static HTML.</div>
+<div class="prompt-box">
+<button class="copy-btn" onclick="copyP(this)">Copy</button>
+<div class="prompt-text">You are a senior full-stack developer. Build two features: auto-generating Excel reports from real data, and a live warehouse network page.
+
+STACK: Node.js + Express + PostgreSQL + Vanilla JS
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+FEATURE 1: Report Generation (Excel)
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+BACKEND:
+- npm install exceljs
+- GET /api/reports/purchase?period=6m [requireAuth]: generate Excel file
+  Sheet "Summary": total PO value, supplier count, avg lead time, top 5 suppliers table
+  Sheet "All Orders": all purchase_orders rows for period with product name and brand name joined, all columns
+  Sheet "By Supplier": GROUP BY supplier_name — total orders, total value, avg lead time, on-time %
+  period param: 6m=6months, 3m=3months, 12m=all last 12 months, all=no date filter
+  Return as attachment: res.setHeader('Content-Disposition', 'attachment; filename=Purchase_Report_[YYYY-MM-DD].xlsx')
+
+- GET /api/reports/inventory?period=6m [requireAuth]:
+  Sheet "Summary": total variance, total damage loss, accuracy rate
+  Sheet "All Counts": all inventory_logs with product and brand names
+  Sheet "By Warehouse": GROUP BY warehouse — totals
+
+- GET /api/reports/sales?period=6m [requireAuth]:
+  Sheet "Summary": total revenue, units, channel breakdown, market breakdown
+  Sheet "All Sales": all sales_transactions with product and brand names
+  Sheet "By Product": GROUP BY product — units sold, total revenue, avg price
+
+FRONTEND — Update frontend/pages/reports.html:
+- Add 3 new report cards at the top (keep existing Power BI cards — do not remove):
+  Card 1: "Purchase Orders Report" — period dropdown (3m/6m/12m/All) — Download Excel button
+  Card 2: "Inventory Report" — period dropdown — Download Excel button
+  Card 3: "Sales Performance Report" — period dropdown — Download Excel button
+- On Download click: window.open('/api/reports/TYPE?period=X', '_blank') — triggers file download
+- Show the JWT in the request: use a form POST approach or include token as query param
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+FEATURE 2: Live Network / Warehouse Page
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+HERE IS MY CURRENT frontend/pages/network.html:
+[PASTE YOUR FULL network.html FILE HERE]
+
+MY WAREHOUSE COLUMN in inventory_logs contains values like:
+'Dubai Warehouse A', 'Abu Dhabi Store', 'KSA Distribution', 'Online Reserve'
+
+BACKEND — GET /api/network/warehouses [requireAuth]:
+Query inventory_logs to get latest count per product per warehouse (DISTINCT ON (product_id, warehouse) ORDER BY count_date DESC):
+GROUP BY warehouse and return:
+[{
+  warehouse: string,
+  total_physical: SUM latest physical_qty,
+  total_erp: SUM latest erp_qty,
+  product_count: COUNT distinct product_ids,
+  avg_stock_pct: AVG(physical_qty::float/GREATEST(erp_qty,1)*100),
+  status: 'healthy' if avg_stock_pct >= 60, 'low' if >= 30, 'critical' if < 30,
+  last_count_date: MAX(count_date)
+}]
+
+Also return the full list of portal cities even if no warehouse data exists for them yet.
+
+FRONTEND — Update initNetworkPage() in app.js or network.html:
+On navigate('network'): fetch GET /api/network/warehouses with JWT
+Map warehouse names to city cards:
+- 'Dubai Warehouse A' or 'Dubai' → Dubai card
+- 'KSA Distribution' or 'KSA' → Riyadh/KSA card
+- 'Abu Dhabi Store' → Abu Dhabi (show in Dubai card as secondary if needed)
+For each network-card:
+- Update .network-status dot: green=#10B981 (healthy), amber=#F59E0B (low), red=#EF4444 (critical), gray (no data)
+- Update the detail text with real product_count and stock status
+- Cities with no DB data: show "No warehouse data yet" in gray status dot
+Keep onclick="openCityDashboard('City')" working for Power BI links
+
+Show all backend routes and frontend changes.</div>
+</div>
+</div>
+
+<div class="prompt-block">
+<div class="prompt-meta"><div class="prompt-label">Prompt 13 — Production Deployment and Security Hardening</div><div class="prompt-tag tag-low">Final Step</div></div>
+<div class="prompt-desc">Prepares the portal for real deployment on Render.com. Adds security headers, rate limiting, caching, and a complete step-by-step deployment guide.</div>
+<div class="prompt-box">
+<button class="copy-btn" onclick="copyP(this)">Copy</button>
+<div class="prompt-text">You are a senior DevOps and Node.js engineer. Prepare my JanBros portal for production deployment on Render.com.
+
+HERE IS MY FINAL server.js:
+[PASTE YOUR FINAL server.js HERE]
+
+HERE IS MY backend/package.json:
+[PASTE backend/package.json HERE]
+
+TARGET: Render.com free tier (Node.js web service + managed PostgreSQL)
+
+TASK 1 — Security hardening (add to server.js):
+- npm install helmet cors express-rate-limit
+- Add helmet() as first middleware
+- CORS: allow only process.env.ALLOWED_ORIGIN (your domain) in production, allow all origins in development
+- Rate limiting:
+  - All /api routes: 100 requests per 15 minutes per IP
+  - /api/auth routes specifically: 20 requests per 15 minutes per IP (stricter for login)
+- Request logging: log "METHOD /path STATUS Xms" to console for every request
+- In production: catch-all error handler returns {error: 'Internal server error'} not stack traces
+
+TASK 2 — Performance:
+- Update pg Pool config: max:10, idleTimeoutMillis:30000, connectionTimeoutMillis:2000
+- Simple 5-minute cache for the 4 analytics endpoints using a Map object:
+  - Cache key: route + '-' + user.role (different roles may see different data)
+  - Cache invalidates when any POST to /api/data-entry/* succeeds (add cache.clear() call)
+  - Show how to implement this as a middleware or inline in analytics.js
+
+TASK 3 — Environment configuration:
+- Create backend/config.js that exports settings based on NODE_ENV
+- Production: use DATABASE_URL (Render provides this as a single connection string), NODE_ENV=production
+- Show how to update the Pool to use DATABASE_URL in production vs individual vars in development:
+  const pool = new Pool(process.env.DATABASE_URL ? {connectionString: process.env.DATABASE_URL, ssl:{rejectUnauthorized:false}} : {individual vars from .env})
+- GET /api/health endpoint: returns {status:'ok', db:'connected', timestamp:new Date().toISOString(), version:'1.0.0', env:process.env.NODE_ENV}
+  — check DB by running 'SELECT 1' and time it
+
+TASK 4 — Render.com deployment guide:
+Write exact step-by-step instructions:
+1. Git repository setup: what to commit, what goes in .gitignore
+2. Create Render PostgreSQL service: what settings to choose
+3. Create Render Web Service: what to set for Root Directory, Build Command, Start Command
+4. Environment variables to set in Render dashboard: list every single one with example values
+5. How to run the SQL table creation on Render PostgreSQL (using Render's psql shell)
+6. How to deploy updates: git push → auto-deploy
+
+TASK 5 — Performance indexes to run in PostgreSQL:
+Write the CREATE INDEX statements needed for fast analytics queries:
+- Index for "last 6 months by product" queries
+- Index for "GROUP BY channel" queries
+- Index for "GROUP BY market" queries
+- Index for "stock_pct < 30" alerts
+- Index for "latest log per product" (for inventory summary)
+Explain briefly why each one helps.
+
+TASK 6 — Update topbar (topbar.html) or app.js:
+Add a small colored indicator dot in the topbar that shows portal connectivity:
+- On page load: fetch GET /api/health
+- If 200 response: show green dot with title="Connected"
+- If error: show red dot with title="Server offline"
+The dot should be subtle — 8px circle next to the notification bell</div>
+</div>
+<div class="ctx-box"><strong>Sakshi — Final UAT checklist before going live:</strong>
+1. All 5 roles: log in as each role — correct sidebar items visible/hidden for each
+2. Admin full flow: enter PO + inventory + sale for one product → verify all 4 module overlays show that data
+3. Manager: submit PO for a brand not assigned to them → 403 response
+4. Viewer: try POST /api/data-entry/purchase directly in Postman → 403
+5. Load test: open 5 browser tabs all on dashboard simultaneously → no server crash
+6. GET /api/health → {status:"ok", db:"connected"} with real timestamp
+7. Download each report type (purchase, inventory, sales) → Excel file downloads and opens correctly
+8. Network page: set a warehouse product to stock_pct=15 → that warehouse card's dot turns red</div>
+</div>
+
+</div></div>
+
+<div class="footer">
+<strong>Quick reference — what each phase achieves</strong>
+Phase 1 (Prompts 1-2): Security fixed. Real login. Data Entry sidebar appears for admin. Do this TODAY.<br>
+Phase 2 (Prompts 3-5): 3 new DB tables + 3 entry forms. Admin can start logging real data. Neha prepares historical Excel data in parallel.<br>
+Phase 3 (Prompts 6-8): All charts become real. Dashboard shows live numbers. All 4 module overlays show real per-product data. Neha validates every number.<br>
+Phase 4 (Prompts 9-11): Sidebar pages wired to live API. 5 roles working. User management. Bulk CSV upload for historical data. Sakshi does full regression.<br>
+Phase 5 (Prompts 12-13): Reports auto-generate. Network page live. Production on Render.com with SSL and security headers.<br><br>
+Each prompt is one Claude conversation. Test between each. If Claude cuts off, say: "Continue from where you stopped, show the rest of the file."
+</div>
+
+<script>
+function copyP(btn){
+  const text = btn.nextElementSibling.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied!';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied')},2000);
+  });
+}
+</script>
+</body>
+</html>
