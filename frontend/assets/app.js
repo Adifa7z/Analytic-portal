@@ -30,7 +30,7 @@ async function bootstrapPortal() {
     await loadFragment('sidebar-container', 'components/sidebar.html');
     await loadFragment('topbar-container', 'components/topbar.html');
 
-    const pages = ['dashboard','analytics','brands','products','inventory','network','reports','spotlight','settings','contact','purchase-intelligence','inventory-control','retail-ops','decision-support'];
+    const pages = ['dashboard','analytics','brands','products','inventory','network','reports','spotlight','settings','contact','purchase-intelligence','inventory-control','retail-ops','decision-support','add-purchase','log-inventory','record-sales','upload-data'];
     await Promise.all(pages.map(p => loadFragment('pages-container', `pages/${p}.html`, 'append')));
 
     await loadFragment('modals-container', 'components/modals/pbi-overlay.html', 'append');
@@ -39,9 +39,28 @@ async function bootstrapPortal() {
     await loadFragment('modals-container', 'components/modals/product-analytics-overlay.html', 'append');
 
     if (typeof translate === 'function') translate();
+
+    // ─── Restore session if token exists ───────────────────────
+    const savedToken = localStorage.getItem('janbros_token');
+    if (savedToken) {
+      try {
+        const meRes = await fetch('/api/auth/me', {
+          headers: { 'Authorization': 'Bearer ' + savedToken }
+        });
+        if (meRes.ok) {
+          const { user } = await meRes.json();
+          localStorage.setItem('janbros_user', JSON.stringify(user));
+          _enterApp(user);
+          return;
+        }
+      } catch (_) {}
+      // Token invalid or server error — clear and show login
+      localStorage.removeItem('janbros_token');
+      localStorage.removeItem('janbros_user');
+    }
+
     if (typeof initProducts === 'function') initProducts();
     if (typeof animateBars === 'function') animateBars();
-    // ✅ Load brands from DB on startup
     loadBrandsFromDB();
   } catch (err) {
     console.error(err);
@@ -173,19 +192,81 @@ function setLangSettings(lang, btn) {
 }
 
 // ─── AUTH ────────────────────────────────────────────────────
-function doLogin() {
+async function doLogin() {
+  const email    = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-pass').value;
+  const errEl    = document.getElementById('login-error');
+
+  if (errEl) errEl.textContent = '';
+
+  if (!email || !password) {
+    if (errEl) errEl.textContent = 'Please enter your email and password.';
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (errEl) errEl.textContent = data.error || 'Login failed. Please try again.';
+      return;
+    }
+
+    localStorage.setItem('janbros_token', data.token);
+    localStorage.setItem('janbros_user',  JSON.stringify(data.user));
+    _enterApp(data.user);
+  } catch (err) {
+    console.error(err);
+    if (errEl) errEl.textContent = 'Network error. Please try again.';
+  }
+}
+
+function _enterApp(user) {
   document.querySelectorAll('.auth-screen').forEach(s => s.classList.remove('active'));
   document.getElementById('app-layout').style.display = 'flex';
+  applyRoleUI(user.role);
+  _updateAvatar(user);
   translate();
   initProducts();
   animateBars();
-  loadBrandsFromDB(); // ✅ reload brands on login
+  loadBrandsFromDB();
 }
+
+function applyRoleUI(role) {
+  const adminSection = document.getElementById('admin-data-entry');
+  if (adminSection) {
+    adminSection.style.display = role === 'admin' ? '' : 'none';
+  }
+}
+
+function _updateAvatar(user) {
+  const initials = user.name
+    ? user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+    : user.email.slice(0, 2).toUpperCase();
+
+  const btn = document.getElementById('avatar-btn');
+  if (btn) btn.textContent = initials;
+
+  const nameEl  = document.getElementById('avatar-user-name');
+  const emailEl = document.getElementById('avatar-user-email');
+  if (nameEl)  nameEl.textContent  = user.name  || user.email;
+  if (emailEl) emailEl.textContent = user.email;
+}
+
 function doLogout() {
+  localStorage.removeItem('janbros_token');
+  localStorage.removeItem('janbros_user');
   document.getElementById('app-layout').style.display = 'none';
   document.getElementById('avatar-menu').classList.remove('open');
   document.getElementById('auth-login').classList.add('active');
 }
+
 function showSignup() {
   document.getElementById('auth-login').classList.remove('active');
   document.getElementById('auth-signup').classList.add('active');
@@ -234,14 +315,19 @@ function navigate(page, el) {
   const titleMap = {
     dashboard:'dashboard', analytics:'analytics', brands:'brands', products:'products',
     inventory:'inventory', network:'our_network', reports:'reports',
-    spotlight:'spotlight', settings:'settings', contact:'contact'
+    spotlight:'spotlight', settings:'settings', contact:'contact',
+    'add-purchase':'Add Purchase Order', 'log-inventory':'Log Inventory Count',
+    'record-sales':'Record Sales', 'upload-data':'Upload CSV / Excel',
   };
   const t = i18n[currentLang];
   document.getElementById('page-title').textContent = t[titleMap[page]] || page;
   closeAvatarMenu();
-  if (page === 'products')  initProducts();
-  if (page === 'dashboard') animateBars();
-  if (page === 'brands')    loadBrandsFromDB(); // ✅ DB reload on navigate
+  if (page === 'products')      initProducts();
+  if (page === 'dashboard')     animateBars();
+  if (page === 'brands')        loadBrandsFromDB();
+  if (page === 'add-purchase')  { if (typeof initAddPurchase  === 'function') initAddPurchase();  }
+  if (page === 'log-inventory') { if (typeof initLogInventory === 'function') initLogInventory(); }
+  if (page === 'record-sales')  { if (typeof initRecordSales  === 'function') initRecordSales();  }
 }
 
 // ─── BRAND DROPDOWN ──────────────────────────────────────────

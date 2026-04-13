@@ -120,11 +120,9 @@
       <input class="auth-input" data-i18n-placeholder="pass_ph" id="login-pass" placeholder="••••••••" type="password"/>
     </div>
     
-    <button class="auth-btn" data-i18n="signin_btn" onclick="doLogin()" style="margin-top: 12px; height: 50px; font-size: 16px; width: 100%;">Sign In</button>
-    
-    <div style="margin-top:16px;text-align:center">
-      <span data-i18n="demo_hint" style="font-size:13px;color:#9CA3AF;">Demo: any email / any password</span>
-    </div>
+    <div id="login-error" style="min-height:20px;margin-top:8px;text-align:center;font-size:13px;color:#EF4444;font-weight:600;"></div>
+
+    <button class="auth-btn" data-i18n="signin_btn" onclick="doLogin()" style="margin-top: 4px; height: 50px; font-size: 16px; width: 100%;">Sign In</button>
     
     <div class="auth-divider"><span data-i18n="or_divider">OR</span></div>
     

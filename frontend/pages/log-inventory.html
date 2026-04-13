@@ -1,0 +1,382 @@
+<div class="page" id="page-log-inventory">
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h2>Log Inventory Count</h2>
+      <p style="color:var(--text2);font-size:13px;margin-top:2px">Record physical vs ERP counts — feeds Inventory Control module</p>
+    </div>
+  </div>
+
+  <!-- ── Toast ──────────────────────────────────────────────── -->
+  <div id="inv-toast" style="position:fixed;bottom:28px;right:28px;z-index:9999;padding:13px 20px;border-radius:10px;font-size:14px;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,0.14);display:none;align-items:center;gap:10px;min-width:260px;max-width:420px;transition:opacity 0.3s"></div>
+
+  <!-- ── Entry form card ────────────────────────────────────── -->
+  <div class="card" style="max-width:760px;margin-bottom:24px">
+    <div class="card-header">
+      <span class="card-title">New Inventory Count</span>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:18px;padding:4px 0">
+
+      <!-- Product -->
+      <div>
+        <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);display:block;margin-bottom:8px">Product <span style="color:#EF4444">*</span></label>
+        <select id="inv-product-select"
+          style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-size:14px;background:var(--surface2);color:var(--text);font-family:var(--font-body);outline:none;transition:var(--transition)"
+          onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+          <option value="">— Select a product —</option>
+        </select>
+      </div>
+
+      <!-- Warehouse + Count Date -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);display:block;margin-bottom:8px">Warehouse <span style="color:#EF4444">*</span></label>
+          <select id="inv-warehouse"
+            style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-size:14px;background:var(--surface2);color:var(--text);font-family:var(--font-body);outline:none;transition:var(--transition)"
+            onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+            <option value="Dubai Warehouse A">Dubai Warehouse A</option>
+            <option value="Abu Dhabi Store">Abu Dhabi Store</option>
+            <option value="KSA Distribution">KSA Distribution</option>
+            <option value="Online Reserve">Online Reserve</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);display:block;margin-bottom:8px">Count Date <span style="color:#EF4444">*</span></label>
+          <input id="inv-count-date" type="date"
+            style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-size:14px;background:var(--surface2);color:var(--text);font-family:var(--font-body);outline:none;transition:var(--transition)"
+            onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"/>
+        </div>
+      </div>
+
+      <!-- ERP Qty + Physical Qty -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);display:block;margin-bottom:8px">
+            ERP / System Quantity <span style="color:#EF4444">*</span>
+            <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text3)"> — what the software shows</span>
+          </label>
+          <input id="inv-erp-qty" type="number" min="0" placeholder="0"
+            style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-size:14px;background:var(--surface2);color:var(--text);font-family:var(--font-body);outline:none;transition:var(--transition)"
+            onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"
+            oninput="updateInvVariance()"/>
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);display:block;margin-bottom:8px">
+            Actual Physical Count <span style="color:#EF4444">*</span>
+            <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text3)"> — what you counted</span>
+          </label>
+          <input id="inv-physical-qty" type="number" min="0" placeholder="0"
+            style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-size:14px;background:var(--surface2);color:var(--text);font-family:var(--font-body);outline:none;transition:var(--transition)"
+            onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"
+            oninput="updateInvVariance()"/>
+        </div>
+      </div>
+
+      <!-- Live variance box -->
+      <div id="inv-variance-box" style="border-radius:var(--radius-sm);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:1.5px solid var(--border)">
+        <div>
+          <div id="inv-variance-label" style="font-size:13px;font-weight:700;color:var(--text3)">Enter both quantities to see variance</div>
+          <div id="inv-variance-pct" style="font-size:12px;color:var(--text3);margin-top:3px"></div>
+        </div>
+        <div id="inv-variance-value" style="font-size:24px;font-weight:800;color:var(--text3)">—</div>
+      </div>
+
+      <!-- Damage + Shrinkage -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);display:block;margin-bottom:8px">
+            Damaged / Unsellable Units
+          </label>
+          <input id="inv-damage-qty" type="number" min="0" value="0"
+            style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-size:14px;background:var(--surface2);color:var(--text);font-family:var(--font-body);outline:none;transition:var(--transition)"
+            onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"/>
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);display:block;margin-bottom:8px">
+            Missing Units <span style="font-weight:400;text-transform:none;letter-spacing:0">(theft, expiry, admin error)</span>
+          </label>
+          <input id="inv-shrinkage-qty" type="number" min="0" value="0"
+            style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-size:14px;background:var(--surface2);color:var(--text);font-family:var(--font-body);outline:none;transition:var(--transition)"
+            onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"/>
+        </div>
+      </div>
+
+      <!-- Counted By + Notes -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);display:block;margin-bottom:8px">Counted By</label>
+          <input id="inv-counted-by" type="text" placeholder="Staff member name"
+            style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-size:14px;background:var(--surface2);color:var(--text);font-family:var(--font-body);outline:none;transition:var(--transition)"
+            onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"/>
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);display:block;margin-bottom:8px">Notes <span style="font-weight:400;text-transform:none">(optional)</span></label>
+          <textarea id="inv-notes" rows="2" placeholder="Discrepancies, conditions, location details..."
+            style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-size:14px;background:var(--surface2);color:var(--text);font-family:var(--font-body);outline:none;resize:vertical;transition:var(--transition)"
+            onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+        </div>
+      </div>
+
+      <!-- Inline error -->
+      <div id="inv-error" style="display:none;background:#fef2f2;border:1.5px solid #fecaca;border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;font-weight:600;color:#dc2626"></div>
+
+      <!-- Buttons -->
+      <div style="display:flex;gap:10px;align-items:center;padding-top:4px">
+        <button id="inv-submit-btn" class="btn-primary" onclick="submitInventoryCount()" style="padding:11px 28px">Save Count</button>
+        <button class="btn-ghost" onclick="clearInvForm()" style="padding:11px 20px">Clear Form</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Recent counts card ─────────────────────────────────── -->
+  <div class="card" style="max-width:1040px">
+    <div class="card-header">
+      <span class="card-title">Recent Inventory Counts</span>
+      <button class="btn-ghost" onclick="loadRecentCounts()" style="padding:5px 14px;font-size:12px;display:flex;align-items:center;gap:5px">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Refresh
+      </button>
+    </div>
+
+    <div id="inv-table-empty" style="display:none;padding:32px;text-align:center;color:var(--text3);font-size:14px">
+      No inventory counts logged yet. Add your first count above.
+    </div>
+
+    <div class="table-wrap" id="inv-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Product (SKU)</th>
+            <th>Warehouse</th>
+            <th style="text-align:right">ERP Qty</th>
+            <th style="text-align:right">Physical</th>
+            <th style="text-align:right">Variance</th>
+            <th style="text-align:right">Damage</th>
+            <th style="text-align:right">Shrinkage</th>
+            <th>Counted By</th>
+          </tr>
+        </thead>
+        <tbody id="inv-tbody">
+          <tr><td colspan="9" style="text-align:center;color:var(--text3);padding:24px;font-size:13px">Loading counts…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── Toast ────────────────────────────────────────────────────
+function _invToast(msg, type) {
+  const el = document.getElementById('inv-toast');
+  if (!el) return;
+  el.style.background = type === 'success' ? '#064E3B' : '#7F1D1D';
+  el.style.color      = '#fff';
+  el.innerHTML        = (type === 'success' ? '✓ ' : '⚠ ') + msg;
+  el.style.display    = 'flex';
+  el.style.opacity    = '1';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.style.display = 'none', 300); }, 4000);
+}
+
+// ─── Live variance box ────────────────────────────────────────
+function updateInvVariance() {
+  const erpRaw  = document.getElementById('inv-erp-qty')?.value;
+  const physRaw = document.getElementById('inv-physical-qty')?.value;
+  const box     = document.getElementById('inv-variance-box');
+  const label   = document.getElementById('inv-variance-label');
+  const pct     = document.getElementById('inv-variance-pct');
+  const val     = document.getElementById('inv-variance-value');
+  if (!box || erpRaw === '' || physRaw === '') {
+    box.style.background    = 'var(--surface2)';
+    box.style.borderColor   = 'var(--border)';
+    label.style.color       = 'var(--text3)';
+    label.textContent       = 'Enter both quantities to see variance';
+    pct.textContent         = '';
+    val.style.color         = 'var(--text3)';
+    val.textContent         = '—';
+    return;
+  }
+  const erp      = Number(erpRaw);
+  const phys     = Number(physRaw);
+  const variance = phys - erp;
+  const pctVal   = erp > 0 ? ((variance / erp) * 100).toFixed(1) : null;
+  const sign     = variance > 0 ? '+' : '';
+
+  if (variance < 0) {
+    box.style.background  = 'rgba(239,68,68,0.07)';
+    box.style.borderColor = 'rgba(239,68,68,0.3)';
+    label.style.color     = '#DC2626';
+    label.textContent     = 'Deficit: ' + variance + ' units (system shows ' + erp + ', counted ' + phys + ')';
+    val.style.color       = '#DC2626';
+    val.textContent       = variance + ' units';
+    pct.style.color       = '#DC2626';
+    pct.textContent       = pctVal !== null ? 'Variance: ' + pctVal + '%' : '';
+  } else if (variance > 0) {
+    box.style.background  = 'rgba(16,185,129,0.07)';
+    box.style.borderColor = 'rgba(16,185,129,0.3)';
+    label.style.color     = '#059669';
+    label.textContent     = 'Surplus: +' + variance + ' units (system shows ' + erp + ', counted ' + phys + ')';
+    val.style.color       = '#059669';
+    val.textContent       = '+' + variance + ' units';
+    pct.style.color       = '#059669';
+    pct.textContent       = pctVal !== null ? 'Variance: +' + pctVal + '%' : '';
+  } else {
+    box.style.background  = 'var(--surface2)';
+    box.style.borderColor = 'var(--border)';
+    label.style.color     = 'var(--text2)';
+    label.textContent     = 'Perfect match — no variance';
+    val.style.color       = 'var(--text2)';
+    val.textContent       = '0 units';
+    pct.style.color       = 'var(--text3)';
+    pct.textContent       = '0.0% variance';
+  }
+}
+
+// ─── Load products ────────────────────────────────────────────
+async function _loadInvProducts() {
+  const sel = document.getElementById('inv-product-select');
+  if (!sel || sel.options.length > 1) return;
+  try {
+    const res  = await fetch('/api/products', { headers: { 'Authorization': 'Bearer ' + (localStorage.getItem('janbros_token') || '') } });
+    const json = await res.json();
+    (json.data || []).forEach(p => {
+      const o       = document.createElement('option');
+      o.value       = p.id;
+      o.dataset.name = p.name;
+      o.textContent = (p.brand_name || p.brand || 'Unknown') + ' — ' + p.name + ' (' + p.sku + ')';
+      sel.appendChild(o);
+    });
+  } catch(e) { console.error('Could not load products', e); }
+}
+
+// ─── Load recent counts ───────────────────────────────────────
+async function loadRecentCounts() {
+  const tbody = document.getElementById('inv-tbody');
+  const empty = document.getElementById('inv-table-empty');
+  const wrap  = document.getElementById('inv-table-wrap');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text3);padding:24px;font-size:13px">Loading…</td></tr>';
+
+  try {
+    const res  = await fetch('/api/data-entry/inventory-logs', { headers: { 'Authorization': 'Bearer ' + (localStorage.getItem('janbros_token') || '') } });
+    const json = await res.json();
+    const rows = json.data || [];
+
+    if (!rows.length) {
+      tbody.innerHTML = '';
+      if (empty) empty.style.display = 'block';
+      if (wrap)  wrap.style.display  = 'none';
+      return;
+    }
+    if (empty) empty.style.display = 'none';
+    if (wrap)  wrap.style.display  = '';
+
+    tbody.innerHTML = rows.map(r => {
+      const v    = Number(r.variance);
+      const sign = v > 0 ? '+' : '';
+      const varStyle = v < 0
+        ? 'color:#DC2626;font-weight:700'
+        : v > 0 ? 'color:#059669;font-weight:700'
+        : 'color:var(--text3)';
+      return `<tr>
+        <td style="white-space:nowrap">${(r.count_date || '').slice(0, 10)}</td>
+        <td><span style="font-weight:600">${r.product_name || '—'}</span><br><span style="font-size:12px;color:var(--text3)">${r.product_sku || ''}</span></td>
+        <td style="color:var(--text2);font-size:13px">${r.warehouse}</td>
+        <td style="text-align:right">${Number(r.erp_qty).toLocaleString()}</td>
+        <td style="text-align:right;font-weight:600">${Number(r.physical_qty).toLocaleString()}</td>
+        <td style="text-align:right;${varStyle}">${sign}${v}</td>
+        <td style="text-align:right;color:${Number(r.damage_qty) > 0 ? '#D97706' : 'var(--text3)'}">${Number(r.damage_qty).toLocaleString()}</td>
+        <td style="text-align:right;color:${Number(r.shrinkage_qty) > 0 ? '#D97706' : 'var(--text3)'}">${Number(r.shrinkage_qty).toLocaleString()}</td>
+        <td style="color:var(--text2);font-size:13px">${r.counted_by || '—'}</td>
+      </tr>`;
+    }).join('');
+  } catch {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#DC2626;padding:24px;font-size:13px">Failed to load counts.</td></tr>';
+  }
+}
+
+// ─── Clear form ───────────────────────────────────────────────
+function clearInvForm() {
+  ['inv-product-select','inv-counted-by','inv-notes'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  document.getElementById('inv-warehouse').value    = 'Dubai Warehouse A';
+  document.getElementById('inv-erp-qty').value      = '';
+  document.getElementById('inv-physical-qty').value = '';
+  document.getElementById('inv-damage-qty').value   = '0';
+  document.getElementById('inv-shrinkage-qty').value= '0';
+  document.getElementById('inv-count-date').value   = new Date().toISOString().slice(0, 10);
+  const err = document.getElementById('inv-error');
+  if (err) err.style.display = 'none';
+  updateInvVariance();
+}
+
+// ─── Submit ───────────────────────────────────────────────────
+async function submitInventoryCount() {
+  const errEl = document.getElementById('inv-error');
+  const btn   = document.getElementById('inv-submit-btn');
+  if (errEl) errEl.style.display = 'none';
+
+  const product_id    = document.getElementById('inv-product-select').value;
+  const warehouse     = document.getElementById('inv-warehouse').value;
+  const count_date    = document.getElementById('inv-count-date').value;
+  const erp_qty       = document.getElementById('inv-erp-qty').value;
+  const physical_qty  = document.getElementById('inv-physical-qty').value;
+  const damage_qty    = Number(document.getElementById('inv-damage-qty').value)    || 0;
+  const shrinkage_qty = Number(document.getElementById('inv-shrinkage-qty').value) || 0;
+  const counted_by    = document.getElementById('inv-counted-by').value.trim() || null;
+  const notes         = document.getElementById('inv-notes').value.trim()      || null;
+
+  const sel         = document.getElementById('inv-product-select');
+  const productName = sel?.options[sel.selectedIndex]?.dataset?.name || 'product';
+
+  const missing = [];
+  if (!product_id)         missing.push('Product');
+  if (!count_date)         missing.push('Count Date');
+  if (erp_qty === '')      missing.push('ERP Quantity');
+  if (physical_qty === '') missing.push('Physical Count');
+
+  if (missing.length) {
+    if (errEl) { errEl.textContent = 'Please fill required fields: ' + missing.join(', '); errEl.style.display = 'block'; }
+    return;
+  }
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+  try {
+    const res  = await fetch('/api/data-entry/inventory', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (localStorage.getItem('janbros_token') || '') },
+      body:    JSON.stringify({ product_id, warehouse, count_date, erp_qty: Number(erp_qty), physical_qty: Number(physical_qty), damage_qty, shrinkage_qty, counted_by, notes })
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (errEl) { errEl.textContent = data.error || 'Failed to save count.'; errEl.style.display = 'block'; }
+      return;
+    }
+
+    _invToast('Inventory count logged. Stock updated to ' + Number(physical_qty).toLocaleString() + ' units for ' + productName + '.', 'success');
+    clearInvForm();
+    loadRecentCounts();
+  } catch {
+    if (errEl) { errEl.textContent = 'Network error. Please check your connection and try again.'; errEl.style.display = 'block'; }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Save Count'; }
+  }
+}
+
+// ─── Page init ────────────────────────────────────────────────
+function initLogInventoryPage() {
+  const d = document.getElementById('inv-count-date');
+  if (d && !d.value) d.value = new Date().toISOString().slice(0, 10);
+  _loadInvProducts();
+  loadRecentCounts();
+}
+
+const initLogInventory = initLogInventoryPage;
+</script>

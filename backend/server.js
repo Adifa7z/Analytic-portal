@@ -1,7 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const { Pool } = require('pg');
 const productModulesRouter = require('./routes/product-modules');
+const { router: authRouter } = require('./routes/auth');
+const dataEntryRouter        = require('./routes/data-entry');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,11 +22,11 @@ app.use('/modules', express.static(path.join(frontendDir, 'modules')));
 
 // ─── PostgreSQL Pool ──────────────────────────────────────────
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'janbros_db',
-  password: 'neha*123',
-  port: 5432,
+  user:     process.env.DB_USER,
+  host:     process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port:     Number(process.env.DB_PORT) || 5432,
 });
 
 // Make pool available to the product modules router
@@ -31,6 +34,10 @@ app.use((req, _res, next) => {
   req.pool = pool;
   next();
 });
+
+// ─── Auth routes ─────────────────────────────────────────────
+app.use('/api/auth',       authRouter);
+app.use('/api/data-entry', dataEntryRouter);
 
 // ─── HEALTH ───────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
