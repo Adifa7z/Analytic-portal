@@ -9,13 +9,19 @@ const router  = express.Router();
 
 // ─── Helper: derive simulated metrics from real product data ──
 function deriveMetrics(p) {
-  const price     = Number(p.price     || 0);
-  const cost      = Number(p.cost      || p.cost_price || (price * 0.63));
-  const stock     = Number(p.stock     || 0);
-  const stockPct  = Number(p.stock_pct || 50);
-  const sold      = Number(p.units_sold || p.sold || Math.max(50, Math.round(stock * 4.2)));
-  const days      = Number(p.days_in_stock || Math.max(7, Math.round(stock / Math.max(sold / 30, 1))));
-  const margin    = price > 0 ? ((price - cost) / price) * 100 : 22;
+  const rawPrice  = parseFloat(p.price);
+  const price     = isNaN(rawPrice) ? 0 : rawPrice;
+  const rawCost   = parseFloat(p.cost || p.cost_price);
+  const cost      = isNaN(rawCost) ? (price * 0.63) : rawCost;
+  const rawStock  = parseFloat(p.stock);
+  const stock     = isNaN(rawStock) ? 0 : rawStock;
+  const rawPct    = parseFloat(p.stock_pct);
+  const stockPct  = isNaN(rawPct) ? 50 : rawPct;
+  const rawSold   = parseFloat(p.units_sold || p.sold);
+  const sold      = isNaN(rawSold) ? Math.max(50, Math.round(stock * 4.2)) : rawSold;
+  const rawDays   = parseFloat(p.days_in_stock);
+  const days      = isNaN(rawDays) ? Math.max(7, Math.round(stock / Math.max(sold / 30, 1))) : rawDays;
+  const margin    = price > 0 ? ((price - cost) / price) * 100 : 22.0;
   const revenue   = price * sold;
   const profit    = (price - cost) * sold;
 

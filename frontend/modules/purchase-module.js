@@ -47,7 +47,9 @@ function _renderPurchaseContent(d) {
             ${_legend('#1A56DB','Purchases')} ${_legend('#10B981','Sales')}
           </div>
         </div>
-        <canvas id="purchase-line-chart" height="130"></canvas>
+        <div style="position:relative;height:200px;width:100%;margin-top:10px">
+          <canvas id="purchase-line-chart" style="width:100%;height:100%"></canvas>
+        </div>
       </div>
 
       <div class="mod-card">
@@ -99,7 +101,9 @@ function _renderPurchaseContent(d) {
     <!-- Bar chart: monthly purchase units -->
     <div class="mod-card">
       <div class="mod-card-hdr"><span class="mod-card-title">Monthly Purchase vs Sales Volume</span></div>
-      <canvas id="purchase-bar-chart" height="100"></canvas>
+      <div style="position:relative;height:220px;width:100%;margin-top:10px">
+        <canvas id="purchase-bar-chart" style="width:100%;height:100%"></canvas>
+      </div>
     </div>
   `;
 
@@ -107,16 +111,53 @@ function _renderPurchaseContent(d) {
   const lineCtx = document.getElementById('purchase-line-chart');
   if (lineCtx) {
     if (_purchaseChartLine) _purchaseChartLine.destroy();
+    
+    const ctx = lineCtx.getContext('2d');
+    const gradSales = ctx.createLinearGradient(0, 0, 0, 150);
+    gradSales.addColorStop(0, 'rgba(16,185,129,0.3)');
+    gradSales.addColorStop(1, 'rgba(16,185,129,0.0)');
+    
+    const gradPurch = ctx.createLinearGradient(0, 0, 0, 150);
+    gradPurch.addColorStop(0, 'rgba(26,86,219,0.3)');
+    gradPurch.addColorStop(1, 'rgba(26,86,219,0.0)');
+
     _purchaseChartLine = new Chart(lineCtx, {
       type: 'line',
       data: {
         labels:   d.trends.labels,
         datasets: [
-          { label: 'Purchases', data: d.trends.purchase, borderColor: '#1A56DB', backgroundColor: 'rgba(26,86,219,0.08)', borderWidth: 2.5, tension: 0.4, fill: true, pointRadius: 3 },
-          { label: 'Sales',     data: d.trends.sales,    borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.08)', borderWidth: 2.5, tension: 0.4, fill: true, pointRadius: 3 },
+          { label: 'Purchases', data: d.trends.purchase, borderColor: '#1A56DB', backgroundColor: gradPurch, borderWidth: 3, tension: 0.4, fill: true, pointBackgroundColor: '#fff', pointBorderColor: '#1A56DB', pointBorderWidth: 2, pointRadius: 4, pointHoverRadius: 6 },
+          { label: 'Sales',     data: d.trends.sales,    borderColor: '#10B981', backgroundColor: gradSales, borderWidth: 3, tension: 0.4, fill: true, pointBackgroundColor: '#fff', pointBorderColor: '#10B981', pointBorderWidth: 2, pointRadius: 4, pointHoverRadius: 6 },
         ]
       },
-      options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' } }, x: { grid: { display: false } } } }
+      options: { 
+        responsive: true, 
+        maintainAspectRatio: false,
+        plugins: { 
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1e293b',
+            titleFont: { size: 13, family: 'system-ui' },
+            bodyFont: { size: 14, family: 'system-ui', weight: 'bold' },
+            padding: 12,
+            cornerRadius: 8,
+            callbacks: {
+              label: function(context) { return ' ' + context.dataset.label + ': ' + context.parsed.y + ' units'; }
+            }
+          }
+        }, 
+        scales: { 
+          y: { 
+            beginAtZero: true, 
+            grid: { color: 'rgba(0,0,0,0.03)', drawBorder: false, borderDash: [5, 5] },
+            ticks: { font: { size: 11, family: 'system-ui' }, color: '#94a3b8' }
+          }, 
+          x: { 
+            grid: { display: false, drawBorder: false },
+            ticks: { font: { size: 11, family: 'system-ui' }, color: '#94a3b8' }
+          } 
+        } 
+      }
     });
   }
 
@@ -129,11 +170,38 @@ function _renderPurchaseContent(d) {
       data: {
         labels:   d.trends.labels,
         datasets: [
-          { label: 'Purchases', data: d.trends.purchase, backgroundColor: 'rgba(26,86,219,0.75)', borderRadius: 6 },
-          { label: 'Sales',     data: d.trends.sales,    backgroundColor: 'rgba(16,185,129,0.75)', borderRadius: 6 },
+          { label: 'Purchases', data: d.trends.purchase, backgroundColor: '#3b82f6', borderRadius: 6, barPercentage: 0.6, categoryPercentage: 0.8 },
+          { label: 'Sales',     data: d.trends.sales,    backgroundColor: '#34d399', borderRadius: 6, barPercentage: 0.6, categoryPercentage: 0.8 },
         ]
       },
-      options: { responsive: true, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' } }, x: { grid: { display: false } } } }
+      options: { 
+        responsive: true, 
+        maintainAspectRatio: false,
+        plugins: { 
+          legend: { position: 'top', labels: { font: { size: 11, family: 'system-ui' }, usePointStyle: true, boxWidth: 8 } },
+          tooltip: {
+            backgroundColor: '#1e293b',
+            titleFont: { size: 13, family: 'system-ui' },
+            bodyFont: { size: 14, family: 'system-ui', weight: 'bold' },
+            padding: 12,
+            cornerRadius: 8,
+            callbacks: {
+              label: function(context) { return ' ' + context.dataset.label + ': ' + context.parsed.y + ' units'; }
+            }
+          }
+        }, 
+        scales: { 
+          y: { 
+            beginAtZero: true, 
+            grid: { color: 'rgba(0,0,0,0.03)', drawBorder: false, borderDash: [5, 5] },
+            ticks: { font: { size: 11, family: 'system-ui' }, color: '#94a3b8' }
+          }, 
+          x: { 
+            grid: { display: false, drawBorder: false },
+            ticks: { font: { size: 11, family: 'system-ui' }, color: '#94a3b8' }
+          } 
+        } 
+      }
     });
   }
 }

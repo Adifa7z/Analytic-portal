@@ -471,6 +471,7 @@ async function openAddProduct() {
 }
 async function openEditProduct(sku) {
   await loadBrandsForDropdown();
+  _openProductModal(sku);
 }
 
 

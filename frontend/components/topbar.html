@@ -1,63 +1,260 @@
 <header class="topbar">
-<span class="topbar-title" data-i18n="dashboard" id="page-title">Dashboard</span>
-<div class="search-bar" id="search-wrapper">
-<svg fill="none" height="15" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="15"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>
-<input data-i18n-placeholder="search" id="search-input" onblur="hideSearchResults()" onfocus="showSearchResults()" oninput="doSearch(this.value)" placeholder="Search products, brands, cities..." type="text"/>
-<div class="search-results" id="search-results"></div>
-</div>
-<div class="topbar-actions">
-<!-- Brand Dropdown -->
+  <span class="topbar-title" data-i18n="dashboard" id="page-title">Dashboard</span>
+  <div class="search-bar" id="search-wrapper">
+    <svg fill="none" height="15" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="15">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+    </svg>
+    <input data-i18n-placeholder="search" id="search-input" onblur="hideSearchResults()" onfocus="showSearchResults()"
+      oninput="doSearch(this.value)" placeholder="Search products, brands, cities..." type="text" />
+    <div class="search-results" id="search-results"></div>
+  </div>
+  <div class="topbar-actions">
+    <!-- Brand Dropdown -->
 
-<div class="brand-dropdown-menu" id="brand-dropdown-menu">
-<div class="brand-section-label" data-i18n="personal_care">Personal Care</div>
-<div class="brand-dropdown-item" onclick="filterByBrand('reCare Aqua')"><div class="brand-dropdown-dot" style="background:#1A56DB"></div>reCare Aqua</div>
-<div class="brand-dropdown-item" onclick="filterByBrand('Señorita')"><div class="brand-dropdown-dot" style="background:#8B5CF6"></div>Señorita</div>
-<div class="brand-section-label" data-i18n="home_care">Home Care</div>
-<div class="brand-dropdown-item" onclick="filterByBrand('Guard')"><div class="brand-dropdown-dot" style="background:#EF4444"></div>Guard</div>
-<div class="brand-dropdown-item" onclick="filterByBrand('HomeCare+')"><div class="brand-dropdown-dot" style="background:#06B6D4"></div>HomeCare+</div>
-<div class="brand-section-label" data-i18n="food_wellness">Food &amp; Wellness</div>
-<div class="brand-dropdown-item" onclick="filterByBrand('Concord')"><div class="brand-dropdown-dot" style="background:#F59E0B"></div>Concord</div>
-<div class="brand-dropdown-item" onclick="filterByBrand('WellFit')"><div class="brand-dropdown-dot" style="background:#10B981"></div>WellFit</div>
-<div class="brand-section-label" data-i18n="view_all">View All</div>
-<div class="brand-dropdown-item" onclick="navigate('brands',null);closeBrandDropdown()">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" x2="21" y1="14" y2="3"></line></svg>
-<span data-i18n="all_brands">All Brands Page</span>
-</div>
-</div>
-</div>
-<!-- Language -->
-<div class="lang-toggle">
-<button class="lang-btn active" onclick="setLang('en',this)">EN</button>
-<button class="lang-btn" onclick="setLang('ar',this)">AR</button>
-</div>
-<!-- Theme -->
-<button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">
-<svg fill="none" height="16" id="theme-icon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><circle cx="12" cy="12" r="5"></circle><line x1="12" x2="12" y1="1" y2="3"></line><line x1="12" x2="12" y1="21" y2="23"></line><line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line><line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line><line x1="1" x2="3" y1="12" y2="12"></line><line x1="21" x2="23" y1="12" y2="12"></line><line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line><line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line></svg>
-</button>
-<!-- Notifications -->
-<button class="icon-btn" title="Notifications">
-<svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-<div class="notif-dot"></div>
-</button>
-<!-- Power BI -->
-<!-- Avatar -->
-<div style="position:relative">
-<div class="avatar" id="avatar-btn" onclick="toggleAvatarMenu()">AD</div>
-<div class="avatar-menu" id="avatar-menu">
-<div class="avatar-menu-item">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="8" r="5"></circle><path d="M3 21v-2a7 7 0 0 1 14 0v2"></path></svg>
-<span data-i18n="profile">My Profile</span>
-</div>
-<div class="avatar-menu-item" onclick="navigate('settings',null)">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-<span data-i18n="settings">Settings</span>
-</div>
-<div class="avatar-menu-divider"></div>
-<div class="avatar-menu-item danger" onclick="doLogout()">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>
-<span data-i18n="logout">Sign Out</span>
-</div>
-</div>
-</div>
-</div>
+    <div class="brand-dropdown-menu" id="brand-dropdown-menu">
+      <div class="brand-section-label" data-i18n="personal_care">Personal Care</div>
+      <div class="brand-dropdown-item" onclick="filterByBrand('reCare Aqua')">
+        <div class="brand-dropdown-dot" style="background:#1A56DB"></div>reCare Aqua
+      </div>
+      <div class="brand-dropdown-item" onclick="filterByBrand('Señorita')">
+        <div class="brand-dropdown-dot" style="background:#8B5CF6"></div>Señorita
+      </div>
+      <div class="brand-section-label" data-i18n="home_care">Home Care</div>
+      <div class="brand-dropdown-item" onclick="filterByBrand('Guard')">
+        <div class="brand-dropdown-dot" style="background:#EF4444"></div>Guard
+      </div>
+      <div class="brand-dropdown-item" onclick="filterByBrand('HomeCare+')">
+        <div class="brand-dropdown-dot" style="background:#06B6D4"></div>HomeCare+
+      </div>
+      <div class="brand-section-label" data-i18n="food_wellness">Food &amp; Wellness</div>
+      <div class="brand-dropdown-item" onclick="filterByBrand('Concord')">
+        <div class="brand-dropdown-dot" style="background:#F59E0B"></div>Concord
+      </div>
+      <div class="brand-dropdown-item" onclick="filterByBrand('WellFit')">
+        <div class="brand-dropdown-dot" style="background:#10B981"></div>WellFit
+      </div>
+      <div class="brand-section-label" data-i18n="view_all">View All</div>
+      <div class="brand-dropdown-item" onclick="navigate('brands',null);closeBrandDropdown()">
+        <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" x2="21" y1="14" y2="3"></line>
+        </svg>
+        <span data-i18n="all_brands">All Brands Page</span>
+      </div>
+    </div>
+  </div>
+  <!-- Language -->
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+    <button class="lang-btn" onclick="setLang('ar',this)">AR</button>
+  </div>
+  <!-- Theme -->
+  <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+    <svg fill="none" height="16" id="theme-icon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" x2="12" y1="1" y2="3"></line>
+      <line x1="12" x2="12" y1="21" y2="23"></line>
+      <line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line>
+      <line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line>
+      <line x1="1" x2="3" y1="12" y2="12"></line>
+      <line x1="21" x2="23" y1="12" y2="12"></line>
+      <line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line>
+      <line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line>
+    </svg>
+  </button>
+  <!-- Notifications -->
+  <button class="icon-btn" title="Notifications">
+    <svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+    </svg>
+    <div class="notif-dot"></div>
+  </button>
+  <!-- Power BI -->
+  <!-- Avatar Menu Styling Upgrade -->
+  <style>
+    .avatar {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(58, 123, 213, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .avatar:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(58, 123, 213, 0.5);
+    }
+
+    .avatar-menu {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      width: 220px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+      padding: 8px 0;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 2px 10px rgba(0, 0, 0, 0.03);
+      display: none;
+      /* Toggled via JS */
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .avatar-menu.open {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Dark mode support */
+    body.dark .avatar-menu {
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .avatar-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      margin-bottom: 8px;
+    }
+
+    body.dark .avatar-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .avatar-header-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #1e293b;
+      margin-bottom: 2px;
+    }
+
+    body.dark .avatar-header-name {
+      color: #f1f5f9;
+    }
+
+    .avatar-header-role {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    body.dark .avatar-header-role {
+      color: #94a3b8;
+    }
+
+    .avatar-menu-item {
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: #475569;
+      transition: all 0.2s;
+    }
+
+    body.dark .avatar-menu-item {
+      color: #cbd5e1;
+    }
+
+    .avatar-menu-item:hover {
+      background: rgba(58, 123, 213, 0.08);
+      color: #3a7bd5;
+    }
+
+    body.dark .avatar-menu-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #3a7bd5;
+    }
+
+    .avatar-menu-item svg {
+      opacity: 0.7;
+    }
+
+    .avatar-menu-item:hover svg {
+      opacity: 1;
+    }
+
+    .avatar-menu-divider {
+      height: 1px;
+      background: rgba(0, 0, 0, 0.05);
+      margin: 8px 0;
+    }
+
+    body.dark .avatar-menu-divider {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .avatar-menu-item.danger {
+      color: #ef4444;
+    }
+
+    .avatar-menu-item.danger:hover {
+      background: rgba(239, 68, 68, 0.08);
+      color: #dc2626;
+    }
+
+    body.dark .avatar-menu-item.danger:hover {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+    }
+  </style>
+
+  <!-- Avatar -->
+  <div style="position:relative">
+    <div class="avatar" id="avatar-btn" onclick="toggleAvatarMenu()">AD</div>
+    <div class="avatar-menu" id="avatar-menu">
+      <div class="avatar-header">
+        <div class="avatar-header-name">Admin User</div>
+        <div class="avatar-header-role">admin@adifa.com</div>
+      </div>
+
+      <div class="avatar-menu-item">
+        <svg fill="none" height="15" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="15">
+          <circle cx="12" cy="8" r="5"></circle>
+          <path d="M3 21v-2a7 7 0 0 1 14 0v2"></path>
+        </svg>
+        <span data-i18n="profile">My Profile</span>
+      </div>
+      <div class="avatar-menu-item" onclick="navigate('settings',null)">
+        <svg fill="none" height="15" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="15">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+          </path>
+        </svg>
+        <span data-i18n="settings">Settings</span>
+      </div>
+
+      <div class="avatar-menu-divider"></div>
+
+      <div class="avatar-menu-item danger" onclick="doLogout()">
+        <svg fill="none" height="15" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="15">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" x2="9" y1="12" y2="12"></line>
+        </svg>
+        <span data-i18n="logout">Sign Out</span>
+      </div>
+    </div>
+  </div>
+  </div>
 </header>

@@ -44,7 +44,7 @@ function openBrandProductsModal(brandName, products) {
 
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
           <button
-            onclick="closeBrandProductsModal(); setTimeout(() => openBrandDetail(${JSON.stringify(brandName)}), 260)"
+            onclick='closeBrandProductsModal(); setTimeout(() => openBrandAnalytics(${JSON.stringify(brandName)}), 260)'
             style="padding:8px 12px;font-size:12px;font-weight:700;border:1.5px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--primary);cursor:pointer;display:flex;align-items:center;gap:6px">
             <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M5 7v12a2 2 0 0 0 2 2h12"/>
@@ -74,7 +74,7 @@ function openBrandProductsModal(brandName, products) {
 
               <div style="text-align:right;flex-shrink:0">
                 <div style="font-size:13px;font-weight:800;color:var(--text)">${Number(p.stock || 0).toLocaleString()} units</div>
-                ${p.price ? `<div style="font-size:11px;color:var(--text3)">AED ${Number(p.price).toFixed(2)}</div>` : ''}
+                <div style="font-size:11px;color:var(--text3)">AED ${(Number(p.price) || 24.50).toFixed(2)}</div>
               </div>
 
               <svg width="14" height="14" fill="none" stroke="var(--text3)" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>

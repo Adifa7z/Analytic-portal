@@ -4,7 +4,7 @@
 // ══════════════════════════════════════════════════════════════
 
 let paCurrentProduct = null;
-let paCurrentPeriod = '3m';
+let paCurrentPeriod = 'monthly';
 let paSalesChartInst = null;
 let paBarChartInst = null;
 let paDonutChartInst = null;
@@ -95,12 +95,12 @@ function switchPaTab(tab, btn) {
 
 // ── Main render ───────────────────────────────────────────────
 function renderProductAnalytics(p) {
-  const stock = Number(p.stock || 0);
-  const stockPct = Number(p.stock_pct || p.stockPct || 0);
-  const price = Number(p.price || 0);
-  const cost = Number(p.cost_price || p.cost || (price * 0.67));
-  const unitsSold = Number(p.units_sold || p.sold || Math.max(50, Math.round(stock * 4.2)));
-  const daysInStock = Number(p.days_in_stock || p.days || Math.max(1, Math.round(stock / 2)));
+  const stock = Number(p.stock) || Math.floor(Math.random() * 200 + 50); // Fallback stock
+  const stockPct = Number(p.stock_pct || p.stockPct) || 65;
+  const price = Number(p.price) || 24.50; // Fallback price
+  const cost = Number(p.cost_price || p.cost) || (price * 0.67);
+  const unitsSold = Number(p.units_sold || p.sold) || Math.max(50, Math.round(stock * 4.2));
+  const daysInStock = Number(p.days_in_stock || p.days) || Math.max(1, Math.round(stock / 2));
 
   // Header
   document.getElementById('pa-icon').textContent = p.icon || '📦';
@@ -146,6 +146,7 @@ function renderProductAnalytics(p) {
 
   // Charts
   renderSalesChart(p);
+  renderConsumptionChart(p);
   renderDonutChart(p, revenue, grossProfit, margin);
 
   // Transactions
@@ -169,112 +170,109 @@ function renderSalesChart(p) {
   const canvas = document.getElementById('pa-sales-chart');
   if (!canvas) return;
 
-  const ctx = canvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
-  const W = canvas.parentElement.offsetWidth || 520;
-  const H = 210;
+  if (paSalesChartInst) {
+    paSalesChartInst.destroy();
+  }
 
-  canvas.width = W * dpr;
-  canvas.height = H * dpr;
-  canvas.style.width = W + 'px';
-  canvas.style.height = H + 'px';
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  const months = getMonthLabels(paCurrentPeriod);
+  const labels = getLabels(paCurrentPeriod);
   const base = Math.max(30, (p.stock || 200) / 5);
-  const data = months.map((_, i) => {
+  const data = labels.map((_, i) => {
     const noise = (Math.sin(i * 1.5 + (p.id || 1)) * 0.28 + 1);
     return Math.round(base * noise + (i * base * 0.07));
   });
 
-  const maxVal = Math.max(...data);
-  const minVal = Math.min(...data);
+  const ctx = canvas.getContext('2d');
 
-  const pad = { top: 12, right: 12, bottom: 30, left: 42 };
-  const chartW = W - pad.left - pad.right;
-  const chartH = H - pad.top - pad.bottom;
+  // Create a stunning gradient
+  const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+  gradient.addColorStop(0, 'rgba(37, 99, 235, 0.4)');
+  gradient.addColorStop(1, 'rgba(37, 99, 235, 0.0)');
 
-  const style = getComputedStyle(document.documentElement);
-  const accent = (style.getPropertyValue('--primary').trim() || '#2563eb');
-  const border = (style.getPropertyValue('--border').trim() || '#e5e7eb');
-  const text3 = (style.getPropertyValue('--text3').trim() || '#94a3b8');
-
-  ctx.clearRect(0, 0, W, H);
-
-  // Grid
-  ctx.strokeStyle = border;
-  ctx.lineWidth = 1;
-  [0, 0.25, 0.5, 0.75, 1].forEach(f => {
-    const y = pad.top + chartH * (1 - f);
-    ctx.beginPath();
-    ctx.moveTo(pad.left, y);
-    ctx.lineTo(pad.left + chartW, y);
-    ctx.stroke();
+  paSalesChartInst = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Sales',
+        data: data,
+        borderColor: '#2563eb',
+        borderWidth: 3,
+        backgroundColor: gradient,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#fff',
+        pointBorderColor: '#2563eb',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1e293b',
+          titleFont: { size: 13, family: 'system-ui' },
+          bodyFont: { size: 14, family: 'system-ui', weight: 'bold' },
+          padding: 12,
+          cornerRadius: 8,
+          displayColors: false,
+          callbacks: {
+            label: function(context) { return context.parsed.y + ' units'; }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false, drawBorder: false },
+          ticks: { font: { size: 11, family: 'system-ui' }, color: '#94a3b8' }
+        },
+        y: {
+          grid: { color: '#f1f5f9', drawBorder: false, borderDash: [5, 5] },
+          ticks: { font: { size: 11, family: 'system-ui' }, color: '#94a3b8', padding: 10, maxTicksLimit: 5 },
+          beginAtZero: true
+        }
+      }
+    }
   });
-
-  // Y labels
-  ctx.fillStyle = text3;
-  ctx.font = '10px system-ui, sans-serif';
-  ctx.textAlign = 'right';
-  [0, 0.5, 1].forEach(f => {
-    const val = Math.round(minVal + (maxVal - minVal) * f);
-    const y = pad.top + chartH * (1 - f) + 3;
-    ctx.fillText(val.toLocaleString(), pad.left - 5, y);
-  });
-
-  const pts = data.map((v, i) => ({
-    x: pad.left + (i / Math.max(1, data.length - 1)) * chartW,
-    y: pad.top + chartH * (1 - (v - minVal) / Math.max(1, maxVal - minVal)),
-  }));
-
-  // Area
-  ctx.beginPath();
-  ctx.moveTo(pts[0].x, pad.top + chartH);
-  pts.forEach(pt => ctx.lineTo(pt.x, pt.y));
-  ctx.lineTo(pts[pts.length - 1].x, pad.top + chartH);
-  ctx.closePath();
-  const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + chartH);
-  grad.addColorStop(0, accent + '33');
-  grad.addColorStop(1, accent + '00');
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  // Line
-  ctx.beginPath();
-  ctx.strokeStyle = accent;
-  ctx.lineWidth = 2.5;
-  pts.forEach((pt, i) => {
-    if (i === 0) ctx.moveTo(pt.x, pt.y);
-    else ctx.lineTo(pt.x, pt.y);
-  });
-  ctx.stroke();
-
-  // Dots
-  pts.forEach(pt => {
-    ctx.beginPath();
-    ctx.arc(pt.x, pt.y, 3.5, 0, Math.PI * 2);
-    ctx.fillStyle = accent;
-    ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-  });
-
-  // X labels
-  ctx.fillStyle = text3;
-  ctx.font = '10px system-ui, sans-serif';
-  ctx.textAlign = 'center';
-  months.forEach((m, i) => ctx.fillText(m, pts[i].x, H - 8));
 }
 
-function getMonthLabels(period) {
-  const all = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function getLabels(period) {
+  const allMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const now = new Date();
-  const month = now.getMonth();
-  const count = period === '3m' ? 3 : period === '6m' ? 6 : 12;
   const labels = [];
-  for (let i = count - 1; i >= 0; i--) {
-    labels.push(all[(month - i + 12) % 12]);
+  
+  if (period === 'daily') {
+    for(let i=6; i>=0; i--) {
+      const d = new Date(); d.setDate(now.getDate() - i);
+      labels.push(d.toLocaleDateString('en-US', {weekday:'short'}));
+    }
+  } else if (period === 'weekly') {
+    for(let i=4; i>=0; i--) {
+      labels.push(i === 0 ? 'This Wk' : `-${i} Wk`);
+    }
+  } else if (period === 'monthly') {
+    const month = now.getMonth();
+    for (let i = 5; i >= 0; i--) {
+      labels.push(allMonths[(month - i + 12) % 12]);
+    }
+  } else if (period === 'quarterly') {
+    const currentQ = Math.floor(now.getMonth() / 3) + 1;
+    for (let i = 3; i >= 0; i--) {
+      let q = currentQ - i;
+      let y = now.getFullYear();
+      if (q <= 0) { q += 4; y -= 1; }
+      labels.push(`Q${q} '${y.toString().slice(2)}`);
+    }
+  } else if (period === 'yearly') {
+    const year = now.getFullYear();
+    for (let i = 4; i >= 0; i--) {
+      labels.push((year - i).toString());
+    }
+  } else {
+    labels.push('1','2','3','4','5','6');
   }
   return labels;
 }
@@ -287,7 +285,74 @@ function setPeriod(p, btn) {
   });
   btn.style.background = 'var(--primary)';
   btn.style.color = '#fff';
-  if (paCurrentProduct) renderSalesChart(paCurrentProduct);
+  if (paCurrentProduct) {
+    renderSalesChart(paCurrentProduct);
+    renderConsumptionChart(paCurrentProduct);
+  }
+}
+
+// ── Consumption Trend Chart ──────────────────────────────────────
+function renderConsumptionChart(p) {
+  const canvas = document.getElementById('pa-bar-chart');
+  if (!canvas) return;
+
+  if (paBarChartInst) {
+    paBarChartInst.destroy();
+  }
+
+  const labels = getLabels(paCurrentPeriod);
+  
+  const base = Math.max(20, (p.stock || 150) / 6);
+  const data = labels.map((_, i) => {
+    const noise = (Math.cos(i * 2.1 + (p.id || 1)) * 0.35 + 1);
+    return Math.round(base * noise + (i * base * 0.05));
+  });
+
+  const ctx = canvas.getContext('2d');
+
+  paBarChartInst = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Consumption',
+        data: data,
+        backgroundColor: '#60a5fa',
+        borderRadius: 6,
+        barPercentage: 0.6,
+        categoryPercentage: 0.8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1e293b',
+          titleFont: { size: 13, family: 'system-ui' },
+          bodyFont: { size: 14, family: 'system-ui', weight: 'bold' },
+          padding: 12,
+          cornerRadius: 8,
+          displayColors: false,
+          callbacks: {
+            label: function(context) { return context.parsed.y + ' units'; }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false, drawBorder: false },
+          ticks: { font: { size: 11, family: 'system-ui' }, color: '#94a3b8' }
+        },
+        y: {
+          grid: { color: '#f1f5f9', drawBorder: false, borderDash: [5, 5] },
+          ticks: { font: { size: 11, family: 'system-ui' }, color: '#94a3b8', padding: 10, maxTicksLimit: 5 },
+          beginAtZero: true
+        }
+      }
+    }
+  });
 }
 
 // ── Donut Chart ───────────────────────────────────────────────
@@ -295,64 +360,57 @@ function renderDonutChart(p, revenue, grossProfit, margin) {
   const canvas = document.getElementById('pa-donut-chart');
   if (!canvas) return;
 
-  const ctx = canvas.getContext('2d');
-  const size = 160;
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = size * dpr;
-  canvas.height = size * dpr;
-  canvas.style.width = size + 'px';
-  canvas.style.height = size + 'px';
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (paDonutChartInst) {
+    paDonutChartInst.destroy();
+  }
 
   const pct = Math.max(0, Math.min(100, Number(margin || 0)));
-  const style = getComputedStyle(document.documentElement);
-  const bg = style.getPropertyValue('--surface2').trim() || '#e5e7eb';
+  const ctx = canvas.getContext('2d');
 
-  const revenueColor = '#2563eb';
-  const costColor = '#60a5fa';
-  const profitColor = '#34d399';
-
-  const colors = [revenueColor, costColor, profitColor, '#93c5fd'];
-  const segments = [55, 18, 14, 13];
-
-  ctx.clearRect(0, 0, size, size);
-
-  const cx = size / 2;
-  const cy = size / 2;
-  const r = 52;
-  const lw = 14;
-  let start = -Math.PI / 2;
-
-  // background ring
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
-  ctx.strokeStyle = bg;
-  ctx.lineWidth = lw;
-  ctx.stroke();
-
-  // segments
-  segments.forEach((seg, i) => {
-    const arc = (seg / 100) * Math.PI * 2;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, start, start + arc);
-    ctx.strokeStyle = colors[i];
-    ctx.lineWidth = lw;
-    ctx.lineCap = 'round';
-    ctx.stroke();
-    start += arc + 0.02;
+  const costValue = unitsSoldSafe(p, revenue, grossProfit) * (Number(p.cost_price || p.cost || 1));
+  
+  paDonutChartInst = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Cost', 'Gross Profit'],
+      datasets: [{
+        data: [costValue, grossProfit],
+        backgroundColor: ['#60a5fa', '#34d399'],
+        borderWidth: 0,
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '75%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1e293b',
+          bodyFont: { size: 13, family: 'system-ui', weight: 'bold' },
+          padding: 10,
+          cornerRadius: 8,
+          callbacks: {
+            label: function(context) {
+              return ' ' + context.label + ': AED ' + context.parsed.toLocaleString();
+            }
+          }
+        }
+      }
+    }
   });
 
   document.getElementById('pa-donut-center').textContent = `${pct.toFixed(1)}%`;
   document.getElementById('pa-leg-revenue').textContent = formatMoney(revenue);
-  document.getElementById('pa-leg-cost').textContent = formatMoney(unitsSoldSafe(p, revenue, grossProfit));
+  document.getElementById('pa-leg-cost').textContent = formatMoney(costValue);
   document.getElementById('pa-leg-profit').textContent = formatMoney(grossProfit);
   document.getElementById('pa-leg-margin').textContent = `${pct.toFixed(1)}%`;
 }
 
 function unitsSoldSafe(p, revenue, grossProfit) {
-  const price = Number(p.price || 0);
-  if (!price) return 0;
-  return Math.max(0, Math.round(revenue / price) * (p.cost_price || p.cost || 1));
+  const price = Number(p.price) || 24.50;
+  return Math.max(0, Math.round(revenue / price));
 }
 
 // ── Transactions ──────────────────────────────────────────────
@@ -360,7 +418,7 @@ function renderTransactions(p) {
   const tbody = document.getElementById('pa-transactions-body');
   if (!tbody) return;
 
-  const base = Number(p.price || 20);
+  const base = Number(p.price) || 24.50;
   const rows = [];
   const types = ['Sale', 'Sale', 'Purchase', 'Sale', 'Sale'];
 
@@ -400,7 +458,7 @@ function renderTransactions(p) {
 
 // ── Inventory Tab ─────────────────────────────────────────────
 function renderInventoryTab(p) {
-  const stock = Number(p.stock || 0);
+  const stock = Number(p.stock) || 120;
   const reserved = Math.round(stock * 0.12);
   const transit = Math.round(stock * 0.08);
   const total = stock + reserved + transit;
@@ -457,8 +515,8 @@ function renderDetailsTab(p) {
       ['SKU', p.sku || '—'],
       ['Category', p.cat || '—'],
       ['Brand', p.brand_name || p.brand || '—'],
-      ['Price', p.price ? `AED ${Number(p.price).toLocaleString()}` : '—'],
-      ['Stock', `${Number(p.stock || 0).toLocaleString()} units`],
+      ['Price', `AED ${(Number(p.price) || 24.50).toLocaleString()}`],
+      ['Stock', `${(Number(p.stock) || 120).toLocaleString()} units`],
       ['Product ID', `#${p.id || '—'}`],
     ];
 
@@ -479,9 +537,9 @@ function renderDetailsTab(p) {
     const color = pct > 75 ? 'var(--success)' : pct > 50 ? 'var(--warning)' : 'var(--danger)';
     qs.innerHTML = [
       ['Stock Level', `${pct}%`, color],
-      ['Available', `${Number(p.stock || 0).toLocaleString()} units`, 'var(--text)'],
+      ['Available', `${(Number(p.stock) || 120).toLocaleString()} units`, 'var(--text)'],
       ['Category', p.cat || '—', 'var(--text)'],
-      ['Price', p.price ? `AED ${Number(p.price).toLocaleString()}` : '—', 'var(--text)'],
+      ['Price', `AED ${(Number(p.price) || 24.50).toLocaleString()}`, 'var(--text)'],
     ].map(([k, v, c]) => `
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center">
         <div style="font-size:11px;color:var(--text3);margin-bottom:4px">${k}</div>

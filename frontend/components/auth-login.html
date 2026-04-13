@@ -1,36 +1,158 @@
+<style>
+  #auth-login {
+    background: linear-gradient(135deg, #F8FAFF 0%, #E2E8F0 100%) !important;
+  }
+  #auth-login .auth-bg-orb.o1 { background: rgba(79, 140, 255, 0.15) !important; filter: blur(60px) !important; }
+  #auth-login .auth-bg-orb.o2 { background: rgba(139, 92, 246, 0.1) !important; filter: blur(70px) !important; }
+  #auth-login .auth-bg-orb.o3 { background: rgba(6, 182, 212, 0.15) !important; filter: blur(60px) !important; }
+
+  #auth-login .auth-card {
+    background-color: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(24px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255,255,255,0.5) inset !important;
+    border-radius: 24px !important;
+  }
+
+  .company-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    justify-content: center;
+  }
+
+  #auth-login .auth-title { color: #111827 !important; font-weight: 800; letter-spacing: -0.5px; }
+  #auth-login .auth-sub { color: #6B7280 !important; font-size: 15px; }
+
+  #auth-login .role-toggle {
+    display: flex;
+    background: rgba(243, 244, 246, 0.7) !important;
+    border: 1px solid rgba(229, 231, 235, 0.5) !important;
+    border-radius: 12px !important;
+    padding: 6px !important;
+    margin-bottom: 24px;
+  }
+  #auth-login .role-btn {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    background: transparent;
+    color: #6B7280 !important;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  #auth-login .role-btn.active {
+    background: #ffffff !important;
+    color: #111827 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+  }
+  #auth-login .role-btn:hover:not(.active) { color: #374151 !important; }
+
+  #auth-login .auth-label { color: #4B5563 !important; font-weight: 700; letter-spacing: 0.05em; }
+  #auth-login .auth-input {
+    background: #ffffff !important;
+    border: 1.5px solid #E5EAF2 !important;
+    color: #111827 !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.01) !important;
+    font-weight: 500;
+  }
+  #auth-login .auth-input::placeholder { color: #9CA3AF !important; font-weight: 400; }
+  #auth-login .auth-input:focus {
+    border-color: #4F8CFF !important;
+    box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.15) !important;
+  }
+
+  #auth-login .auth-btn {
+    background: linear-gradient(135deg, #4F8CFF 0%, #06B6D4 100%) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(79, 140, 255, 0.3) !important;
+    border: none !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #auth-login .auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(79, 140, 255, 0.4) !important;
+  }
+
+  #auth-login .auth-divider::before, 
+  #auth-login .auth-divider::after { background: #E5E7EB !important; }
+  #auth-login .auth-divider span { color: #9CA3AF !important; font-weight: 600; }
+
+  #auth-login .auth-switch { color: #6B7280 !important; }
+  #auth-login .auth-switch a { color: #4F8CFF !important; font-weight: 600; }
+
+  #auth-login .lang-toggle { background: rgba(243, 244, 246, 0.7) !important; border-color: #E5E7EB !important; }
+  #auth-login .lang-btn { color: #6B7280 !important; }
+  #auth-login .lang-btn.active { color: #111827 !important; background: #fff !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; }
+</style>
+
 <div class="auth-screen active" id="auth-login">
-<div class="auth-bg-orb o1"></div>
-<div class="auth-bg-orb o2"></div>
-<div class="auth-bg-orb o3"></div>
-<div class="auth-card">
-<div class="auth-logo">
-<div class="auth-logo-mark">J&amp;B</div>
-<div class="auth-logo-text">
-<strong>Jan &amp; Bros</strong>
-<span data-i18n="enterprise_portal">AnalyticsEnterprise Portal</span>
+  <div class="auth-bg-orb o1"></div>
+  <div class="auth-bg-orb o2"></div>
+  <div class="auth-bg-orb o3"></div>
+  <div class="auth-card" style="padding: 40px; width: 440px;">
+    
+    <div class="company-logo-container" style="margin-bottom: 36px; margin-top: 10px;">
+      <img src="assets/cognexiaai-logo.png" alt="Cognexia AI Logo" style="max-width: 380px; width: 100%; max-height: 120px; object-fit: contain; margin: 0 auto; display: block; filter: drop-shadow(0 0 16px rgba(6, 182, 212, 0.4)) drop-shadow(0 8px 32px rgba(79, 140, 255, 0.3)); transform: scale(1.3);">
+    </div>
+    
+    <div class="auth-title" data-i18n="login_title" style="text-align: center; margin-bottom: 8px;">Welcome back</div>
+    <div class="auth-sub" data-i18n="login_sub" style="text-align: center; margin-bottom: 28px;">Sign in to your enterprise account</div>
+    
+    <div class="role-toggle" id="auth-role-toggle">
+      <button class="role-btn active" onclick="switchLoginRole('admin', this)">Admin Login</button>
+      <button class="role-btn" onclick="switchLoginRole('viewer', this)">Viewer Login</button>
+    </div>
+
+    <div class="auth-field">
+      <label class="auth-label" data-i18n="email_label">Email Address</label>
+      <input class="auth-input" data-i18n-placeholder="email_ph" id="login-email" placeholder="admin@adifa.com" type="email"/>
+    </div>
+    
+    <div class="auth-field">
+      <label class="auth-label" data-i18n="password_label">Password</label>
+      <input class="auth-input" data-i18n-placeholder="pass_ph" id="login-pass" placeholder="••••••••" type="password"/>
+    </div>
+    
+    <button class="auth-btn" data-i18n="signin_btn" onclick="doLogin()" style="margin-top: 12px; height: 50px; font-size: 16px; width: 100%;">Sign In</button>
+    
+    <div style="margin-top:16px;text-align:center">
+      <span data-i18n="demo_hint" style="font-size:13px;color:#9CA3AF;">Demo: any email / any password</span>
+    </div>
+    
+    <div class="auth-divider"><span data-i18n="or_divider">OR</span></div>
+    
+    <div class="auth-switch" data-i18n="no_account">Don't have an account? <a data-i18n="signup_link" onclick="showSignup()">Create one</a></div>
+    
+    <div style="display:flex;justify-content:center;margin-top:24px">
+      <div class="lang-toggle" style="border-radius:10px;padding:4px;display:flex;gap:4px;">
+        <button class="lang-btn active" onclick="setAuthLang('en',this)" style="font-size:12px;font-weight:600;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;">EN</button>
+        <button class="lang-btn" onclick="setAuthLang('ar',this)" style="font-size:12px;font-weight:600;border:none;padding:6px 14px;border-radius:6px;background:transparent;cursor:pointer;">AR</button>
+      </div>
+    </div>
+    
+  </div>
 </div>
-</div>
-<div class="auth-title" data-i18n="login_title">Welcome back</div>
-<div class="auth-sub" data-i18n="login_sub">Sign in to your enterprise account</div>
-<div class="auth-field">
-<label class="auth-label" data-i18n="email_label">Email Address</label>
-<input class="auth-input" data-i18n-placeholder="email_ph" id="login-email" placeholder="admin@janbros.com" type="email"/>
-</div>
-<div class="auth-field">
-<label class="auth-label" data-i18n="password_label">Password</label>
-<input class="auth-input" data-i18n-placeholder="pass_ph" id="login-pass" placeholder="••••••••" type="password"/>
-</div>
-<button class="auth-btn" data-i18n="signin_btn" onclick="doLogin()">Sign In</button>
-<div style="margin-top:12px;text-align:center">
-<span data-i18n="demo_hint" style="font-size:12px;color:rgba(255,255,255,0.35)">Demo: any email / any password</span>
-</div>
-<div class="auth-divider"><span data-i18n="or_divider">OR</span></div>
-<div class="auth-switch" data-i18n="no_account">Don't have an account? <a data-i18n="signup_link" onclick="showSignup()">Create one</a></div>
-<div style="display:flex;justify-content:center;margin-top:20px">
-<div class="lang-toggle" style="border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.06)">
-<button class="lang-btn active" onclick="setAuthLang('en',this)" style="color:rgba(255,255,255,0.6)">EN</button>
-<button class="lang-btn" onclick="setAuthLang('ar',this)" style="color:rgba(255,255,255,0.6)">AR</button>
-</div>
-</div>
-</div>
-</div>
+
+<script>
+  function switchLoginRole(role, btn) {
+    const btns = btn.parentElement.querySelectorAll('.role-btn');
+    btns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const emailInput = document.getElementById('login-email');
+    if(role === 'admin') {
+      emailInput.placeholder = 'admin@adifa.com';
+      emailInput.value = '';
+    } else {
+      emailInput.placeholder = 'viewer@adifa.com';
+      emailInput.value = '';
+    }
+  }
+</script>
