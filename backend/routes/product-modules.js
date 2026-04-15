@@ -17,7 +17,7 @@ function _n(v, fallback = 0) {
   return isNaN(n) ? fallback : n;
 }
 
-// Format as "AED X,XXX"
+// Format as "AED X,XXX"git 
 function _fmt(n) {
   return 'AED ' + Math.round(n).toLocaleString('en-US');
 }
